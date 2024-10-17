@@ -1,0 +1,2031 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+           p.subtitle {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            opacity: 0.6;
+            margin-bottom: 50px;
+        }
+        .faq-section {
+            margin-bottom: 20px;
+        }
+        .faq-section h2 {
+            color: #444;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 25px;
+        }
+        .faq-item {
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+        }
+        .faq-answer {
+            margin-top: 15px;
+            color: #666;
+            display: none;
+        }
+        #openCameraButton {
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #cameraPopup {
+            display: none; /* Initially hidden */
+            position: fixed;
+            z-index: 1; /* Ensure popup is above other content */
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            top: 50%;
+            left: 50%;
+            backdrop-filter: blur(5px);
+            transform: translate(-50%, -50%); /* Center the popup */
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body id="style-2">
+    <div class="blog-wrapper">
+        <form class="main" method="post" action="{% url 'create_blog' %}" enctype="multipart/form-data" style="margin-top: -180px;">
+            {% csrf_token %}
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;z-index: 100;font-size: 15px;" onclick="closeLogin()"><i class="fa-solid fa-x"></i></h2>
+            <img src="{% static 'images/95635-happy-boy.gif' %}" alt="" style="width: 80px;transform: rotate(0deg); margin-bottom: 28px;margin-top: 5px;">
+            <h1 style="color: black;">Create Blog</h1>
+            <p>Post your article now</p>
+
+            <div class="inputs">
+                <input type="text" name="name" placeholder="Name" class="" style="margin-bottom: 10px;" required><br>
+                <input type="file" name="image" class="" style="margin-bottom: 10px;" required><br>
+                <input type="text" name="desc" class="" style="margin-bottom: 10px;" required placeholder = "Enter Description"><br>
+            </div>
+            <p style="display: none;justify-content: center;align-items: center;width: 100%;margin-top: 25px;opacity: 1;margin-bottom: 10px;" class="error1">There was an error creating the blog</p>
+
+            <button type="submit">Create Blog</button>
+        </form>
+    </div>
+    <div class="login-wrapper">
+        <div class="main" style="margin-top: -180px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;z-index: 100;font-size: 15px;" onclick="closeLogin()"><i class="fa-solid fa-x"></i></h2>
+            <img src="{% static 'images/95635-happy-boy.gif' %}" alt="" style="width: 80px;transform: rotate(0deg); margin-bottom: 28px;margin-top: 5px;">
+            <h1 style="color: black;">Signin</h1>
+            <p>Login into your account now</p>
+
+            <div class="inputs">
+                <input type="text" placeholder="username" class="userName" style="margin-bottom: 10px;"><br>
+                <input type="password" placeholder="password" class="password"><br>
+            </div>
+            <p style="display: none;justify-content: center;align-items: center;width: 100%;margin-top: 25px;opacity: 1;margin-bottom: 10px;" class="error">Invalid login credentials</p>
+
+            <button onclick="sendData()">Login into my account</button>
+        </div>
+    </div>
+
+    <div class="signup-wrapper">
+        <div class="main" style="width: 380px;margin-top: -160px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignup()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Signup</h1>
+            <p>Create your new account now</p>
+        
+            <form onsubmit="checkSignup(event)">
+                <div class="inputs inps">
+                    <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                        <input type="text" placeholder="username" class="username1" pattern="^[A-Za-z]+$" title="Username should not contain numbers or special characters" required><br>
+                        <input type="email" placeholder="email address" class="email1" required><br>
+                    </div>
+                    <input type="number" placeholder="phone number" class="phone" required>
+                    <input type="text" placeholder="Address" class="address" required><br>
+                    <input type="file" required accept="Image/*" name="image" id="file" required>
+                    <input type="password" placeholder="password" class="password1" pattern="^(?=.*[a-z])(?=.*[A-Z]).{7,}$" title="Password should be at least 7 characters long and include both uppercase and lowercase letters" required><br>
+                </div>
+                <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err2">Username already exists</p>
+        
+                <button type="submit" >Create a new account</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 style="position: fixed;top: 120px;left: 42%;background-color: #f0f0f0;color: rgb(37, 37, 37);padding: 8px;width: 250px;border-radius: 5px;font-size: 16px;z-index: 1500;font-weight: 600;text-align: center;" class="copy">Copied To Clipboard</h2>
+
+    <div class="shop-wrapper">
+        <div class="main" style="width: 380px;margin-top: -160px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupShop()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1  style="color: black;">Signup Shopkeeper</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+
+                    <input type="text" placeholder="Shop name" class="username2"><br>
+                    <input type="email" placeholder="email address" class="email2"><br>
+                </div>
+                <input type="number" placeholder="phone number" class="phone2">
+                <input type="text" placeholder="Address" class="address2"><br>
+                <select name="type" id="" class="type2">
+                    <option value="">Select shop type</option>
+                    <option value="Medicine">Medicine Shop</option>
+                    <option value="Device">Device Shop</option>
+                    <option value="Book">Book Shop</option>
+                </select>
+                <input type="file" required accept="Image/*" name="image" id="file2">
+                <input type="password" placeholder="password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Shop name already exists</p>
+
+            <button onclick="checkSignup2()">Create a new account account</button>
+        </div>
+    </div>
+    <div class="hosp-wrapper">
+        <div class="main" style="width: 380px;margin-top: -190px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupHosp()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Hospital Signup</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="Hospital name" class="username2"><br>
+                    <input type="email" placeholder="Email address" class="email2"><br>
+                </div>
+                <input type="number" placeholder="Phone number" class="phone2">
+                <input type="text" placeholder="Address" class="address2"><br>
+
+                <select name="type" id="" class="type">
+                    <option value="">Select hospital type</option>
+                    <option value="General">General Hospital</option>
+                    <option value="Specialty">Specialty Hospital</option>
+                    <option value="Psychiatric">Psychiatric Hospital</option>
+                </select>
+                <input type="file" required accept="Image/*" name="image" id="file3">
+                <input type="password" placeholder="Password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Hospital name already exists</p>
+
+            <button onclick="checkSignup3(this.parentNode)">Create a new account</button>
+        </div>
+    </div>
+
+    <div class="doc-wrapper">
+        <div class="main" style="width: 380px;margin-top:-250px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupDoctor()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Doctor Signup</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="First name" class="first"><br>
+                    <input type="text" placeholder="Last name" class="last"><br>
+                </div>
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="Doctor name" class="username2"><br>
+
+                    <input type="email" placeholder="Email address" class="email2"><br>
+                </div>
+                <div style="display: flex;gap: 15px;">
+                <input type="number" placeholder="Phone number" class="phone2">
+
+                    <input type="text" placeholder="Address" class="address2">
+                    <select name="city" id="" required style="height: 45px;" class="city3">
+                        <option value="">District</option>
+                            <option value="Alappuzha">Alappuzha</option>
+                            <option value="Ernakulam">Ernakulam</option>
+                            <option value="Idukki">Idukki</option>
+                            <option value="Kannur">Kannur</option>
+                            <option value="Kasaragod">Kasaragod</option>
+                            <option value="Kollam">Kollam</option>
+                            <option value="Kottayam">Kottayam</option>
+                            <option value="Kozhikode">Kozhikode</option>
+                            <option value="Malappuram">Malappuram</option>
+                            <option value="Palakkad">Palakkad</option>
+                            <option value="Pathanamthitta">Pathanamthitta</option>
+                            <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                            <option value="Thrissur">Thrissur</option>
+                    </select>
+                </div>
+                <div style="display: flex;gap: 15px;">
+                <input type="text" placeholder="Street name" class=""><br>
+                <input type="text" placeholder="House name" class=""><br>
+                </div>
+                <div style="display: flex;justify-content: center;align-items: center;">
+                
+                    <select name="type" id="" class="type">
+                        <option value="">Select specialization</option>
+                        <option value="Cognitive Behavioral Therapy">Cognitive Behavioral Therapy</option>
+                        <option value="Family Therapy">Family Therapy</option>
+                        <option value="Marriage Counseling">Marriage Counseling</option>
+                        <option value="Child Therapy">Child Therapy</option>
+                        <option value="Substance Abuse Therapy">Substance Abuse Therapy</option>
+                        <option value="Trauma Therapy">Trauma Therapy</option>
+                        <option value="Art Therapy">Art Therapy</option>
+                        <option value="Occupational Therapy">Occupational Therapy</option>
+                        <option value="Physical Therapy">Physical Therapy</option>
+                        <option value="Speech Therapy">Speech Therapy</option>
+                        <option value="Music Therapy">Music Therapy</option>
+                    </select>
+                    <input type="text" placeholder="Qualification" ><br>
+                    <input type="text" placeholder="Reg.No" ><br>
+
+
+                </div>
+                <div style="display: flex;gap: 15px;">
+                <input type="text" placeholder="Available time eg. 8:30AM, 4:45PM" class="time"><br>
+                <input type="file" required accept="Image/*" name="image" id="file4">
+                </div>
+                <label>Upload Certificate</label>
+                <input type="file" required accept="Image/*" name="certificate" id="file4">
+                <input type="password" placeholder="Password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Hospital name already exists</p>
+
+            <button onclick="checkSignup4(this.parentNode)">Create a new account</button>
+        </div>
+    </div>
+
+
+    <div class="upload-bill">
+
+        <form method="POST" action="" enctype="multipart/form-data" style="top: 180px;">
+            <img src="{% static 'images/4403214_18410.jpg' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute;top: 0;opacity: 0.9;">
+            {% csrf_token %}
+            <div class="circle" style="width: 650px;height: 550px;border-radius: 100px;background-color: #256790;filter: blur(80px);position: absolute;top: 350px;opacity: 0.1;"></div>
+
+            <h4 onclick = "closeUpload()" style="position: absolute;top: 15px;right: 15px;width: 30px;height: 30px;border-radius: 100px;background-color: rgb(188, 43, 43);color: white;display: flex;justify-content: center;align-items: center;cursor: pointer;"><i class="fa-solid fa-xmark"></i></h4>
+            <!-- <h3 style="font-weight: 600;margin-top: 15px;text-align: center;display: flex;margin-top: 8px;margin-top: 25px;background-color: #2ba74e;color: rgb(255, 255, 255);padding: 8px 25px 8px 25px;border-radius: 5px;font-size: 16px;position: relative;z-index: 10;text-transform: uppercase;margin-bottom: 10px;" >product upload</h3> -->
+            <h1 style="position: relative;z-index: 1;margin-bottom: 10px;text-transform: uppercase;font-size: 23px;margin-top: 18px;">Welcome {{request.user.username }}</h1>
+            <p>Enter the product details below</p>
+            <img src="{% static 'images/medicine.png' %}" alt="" style="position: relative;z-index: 1;width: 60%;height: 300px;object-fit: contain;margin-bottom: 25px;" class="imageMed">
+            <button style="position: relative;padding: 10px;width: 180px;background-color: #88619a;color: white;border: none;outline: none;border-radius: 5px;font-weight: 600;font-size: 16px;">Choose Image <input type="file" name="image" id="" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;opacity: 0;" required onchange="setProfilePic(this)"></button>
+            <h2 style="margin-top: 25px;text-transform: uppercase;">Product Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder="Name" required name = "name">
+                <input type="number" placeholder="Stock" required min="0" name="dosage">
+                <input type="number" placeholder="Price" required min="1" name="price">
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+
+                <!-- <input type="text" placeholder="Active Ingredient" name="activeIngredient" required> -->
+
+                <!-- <select name="activeIngredient" id="" required>
+                    <option value="">Select Origin</option>
+                        <option value="Alappuzha">Alappuzha</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Thrissur">Thrissur</option>
+                </select> -->
+                {% if profile.shopType == "Book" %}
+                <input type="text" placeholder="Author Name" required name = "activeIngredient">
+                <select id="route" name="route" required>
+                    <option value="">Select Genre</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Science Fiction">Science Fiction</option>
+
+                </select>
+                {% elif profile.shopType == "Medicine" %}
+                <input type="text" placeholder="Manufacturer name" required name = "activeIngredient">
+                <select name="route" id="" required>
+                    <option value="">Select Administration Method</option>
+                <option value="Oral">Oral</option>
+                <option value="Transdermal">Transdermal</option>
+                <option value="Intravenous">Intravenous</option>
+                <option value="Intramuscular">Intramuscular</option>
+                <option value="Subcutaneous">Subcutaneous</option>
+                </select>
+                {% endif %}
+
+                <!-- <select id="route" name="route" required>
+                    <option value="">Select Type</option>
+                    <option value="Herb">Herb</option>
+                    <option value="Fruits">Fruit</option>
+                    <option value="Vegetable">Vegetable</option>
+
+
+                </select> -->
+            </div>
+
+            <!-- <h2 style="text-transform: uppercase;">Shopkeeper Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder='Shopkeeper Name' name="manufacturerName" required>
+                <input type="text" placeholder="Address" name="manufacturerAddress" required>
+
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <select id="country" name="manufacturerCountry" class="form-control" required>
+                    <option value="">Select District</option>
+                    <option value="Alappuzha">Alappuzha</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Thrissur">Thrissur</option>
+                </select>
+                <input type="text" placeholder="Phone Number" name="manufacturerContactNumber" required>
+
+            </div> -->
+
+            <!-- <input type="text" id="ins-payment" name="ins-payment" placeholder="Insurance Payment"><br> -->
+            <!-- <input type="text" id="patient-responsibility" name="patient-responsibility" placeholder="Patient Responsibility"><br> -->
+
+            <input type="submit" value="Upload Product" style="background-color: #27924c;color: white;width: 94.5%;">
+        </form>
+
+    </div>
+
+
+    <div class="container">
+        <div class="message" style="z-index: 1500;">
+
+            <div class="wrap-chats">
+                <div class="top-msg">
+
+                    <div class="profile-chat">
+                        <!-- <img src="{{gig.avatar}}" alt=""> -->
+                        <div>
+                            <h3><ion-icon name="chatbubble-ellipses" style="color: #07a44b;margin-right: 10px;"></ion-icon> Messages</h3>
+                            <!-- <p>Avg. response time : {{gig.response_time}}hr</p> -->
+                        </div>
+                    </div>
+                    <h5 onclick="closeMsg()"><i class="fa-solid fa-xmark"></i></h5>
+                </div>
+
+                <div class="chats">
+                    {% for chat in chats %}
+                    <div class="chat" onclick="showMessages(this)">
+                        <input type="hidden" value="{{request.user.username}}" class="from_user1">
+                        <input type="hidden" class="to_user1" value="{{chat.username}}">
+                        <img src="{% static 'images/user.png' %}" alt="">
+                        <div class="chat-details">
+                            <h3 >{{chat.username}}</h3>
+                            <p>click to view message</p>
+                        </div>
+                        <h5>10:25Pm</h5>
+                    </div>
+                    {% endfor %}
+
+
+
+                </div>
+            </div>
+            <input type="hidden" class="global_to" value="">
+            <input type="hidden" class="global_from" value="{{request.user.username}}">
+
+            <div class="wrap-msg" style="position: relative;height: 100%;display: none;">
+                <div class="top-msg">
+                    <div class="profile-chat">
+                        <h4 style="width: 25px;height: 25px;border-radius: 8px;background-color: #07a44b;color: white;display: flex;justify-content: center;align-items: center;" onclick="back()"><ion-icon name="arrow-back-outline"></ion-icon></h4>
+                        <img src="{% static 'images/09 (1).jpg' %}" alt="" class="chat-pic">
+                        <div>
+                            <h3 class="cht-username">ads</h3>
+                            <p class="avg">Avg. response time : 2hr</p>
+                        </div>
+                        <button id="openCameraButton" style="border-radius: 10px;padding: 5px;width: 80px;">Video</button>
+                    </div>
+                    <h5 onclick="closeMsg()"><i class="fa-solid fa-xmark"></i></h5>
+                </div>
+
+                <div class="messages">
+
+
+
+
+                </div>
+
+                <input type="hidden" value = "1" class = "to_user">
+                <input type="hidden" value = "{{request.user.username}}" class = "from_user">
+
+                <div class="msg-options">
+                    <input type="text" placeholder="Type your message here" class="text-msg">
+                    <button onclick="sendMsg()" style="cursor: pointer;"><ion-icon name="send" ></ion-icon></button>
+                </div>
+
+        </div>
+
+        </div>
+        {% if request.user.is_authenticated %}
+        <button onclick="showMsg()" style="transition: 0.3s;cursor: pointer;" class="message-button pulse"><ion-icon name="chatbox-ellipses"></ion-icon></button>
+        {% endif %}
+        <div class="navbar" style="position: fixed;top: 0;width: 100%;z-index: 150;background-color: white;">
+            <center>
+                <img src="https://th.bing.com/th/id/OIP.A_hecpj07ipTwk5ZvtWw_AHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1.3" alt="" style="width: 100px;height: 100px;object-fit: cover;">
+            </center>
+            <div class="navbar1">
+                <div style="width: 1200px;display: flex;justify-content: space-between;align-items: center;padding-left: 45px;">
+                    <div style="display: flex;justify-content: center;align-items: center;gap: 35px;">
+
+                        <h1>Welcome {{request.user.username}} to hope!</h1>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'therapists' %}">
+                            <h6><ion-icon name="person-circle"></ion-icon></h6>
+                            <h5>Therapists</h5>
+                        </a>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="#feeds">
+                            <h6><ion-icon name="chatbubbles"></ion-icon></h6>
+                            <h5>Feedbacks</h5>
+                        </a>
+                        {% if request.user.is_authenticated %}
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'appointmentsall' %}">
+                            <h6><ion-icon name="calendar"></ion-icon></h6>
+                            <h5>Appointments</h5>
+                        </a>
+                        {% if profile.is_doctor %}
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" onclick="showBlog()">
+                            <h6><ion-icon name="calendar"></ion-icon></h6>
+                            <h5>Create Blog</h5>
+                        </a>
+                        {% endif %}
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'yoga' %}">
+                            <h6><ion-icon name="fitness"></ion-icon></h6>
+                            <h5>Yoga Classes</h5>
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="login-details">
+                        {% if not request.user.is_authenticated %}
+                        <div class="login" onclick="showLogin()" style="cursor: pointer;">
+                            <h6><ion-icon name="log-in"></ion-icon></h6>
+                            <h5>Login</h5>
+                        </div>
+                        <!-- <a class="login" href="https://hope369.pythonanywhere.com/admin" style="cursor: pointer;margin-left: 35px;text-decoration: none;">
+                            <h6><ion-icon name="log-in"></ion-icon></h6>
+                            <h5>Admin Login</h5>
+                        </a> -->
+                        <div class="login" onclick="showSignup()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="person-add"></ion-icon></h6>
+                            <h5>Signup</h5>
+                        </div>
+                        <div class="login" onclick="showSignupDoctor()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="medical"></ion-icon></h6>
+                            <h5>Signup Doctor</h5>
+                        </div>
+                        
+                        <!-- <div class="login" onclick="showSignupHospital()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="medical"></ion-icon></h6>
+                            <h5>Hospital Signup</h5>
+                        </div> -->
+                    {% else %}
+                    {% if profile.is_shopkeeper %}
+                    <div class="login" style="cursor: pointer;" onclick="showUpload()">
+                        <img src="{% static 'images/en.jpg' %}" alt="">
+                        <h5><ion-icon name="add-outline"></ion-icon> Add Product</h5>
+                    </div>
+                    {% endif %}
+
+
+
+                    {% if not profile.is_hospital %}
+                    <!-- <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;cursor: default;border: 2px solid rgb(255, 255, 255);padding: 5px 15px 5px 15px;border-radius: 100px;background-color: #07a44b;color: white;gap: 5px;" >
+                        <h6 style="font-weight: 600;color: white;">₹</h6>
+                        <h5 style="color: white;">{{profile.balance}}</h5>
+
+                    </a> -->
+                    {% endif %}
+                    {% if not profile.is_doctor %}
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;" href="{% url 'myclasses' %}">
+                        <h6><ion-icon name="book"></ion-icon></h6>
+                        <h5>My classes</h5>
+
+                    </a>
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;" onclick="showNotifications()">
+                        <h6><ion-icon name="notifications"></ion-icon></h6>
+                        <h5>Notifications</h5>
+
+                    </a>
+                    {% endif %}
+                    <div class="notifications" style="position: absolute;top: 40px;width: 450px;background-color: white;padding: 10px;display: none;right: 340px;flex-direction: column;z-index: 1000;" >
+                        <h4 style="position: absolute;top: 0;right: 0;background-color: rgb(52, 52, 52);color: white;width: 25px;height: 25px;cursor: pointer;display: flex;justify-content: center;align-items: center;z-index: 1990;background-color: rgb(180, 38, 38);pointer-events: all;" onclick="closeNotifications()"><i class="fa-solid fa-xmark"></i></h4>
+                        <h3 style="font-size: 19px;font-weight: 600;text-align: left;width: fit-content;display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="notifications" style="color: #07a44b;"></ion-icon> Notifications For You</h3>
+                        <br>
+                        <p style="font-size: 13px;opacity: 0.7;margin-top: -15px;position: relative;">Below are the list of notifications you have</p>
+                        {% for notification in notifications %}
+                        <a style="display: flex;gap: 8px;justify-content: center;align-items: flex-start;margin-top: 25px;cursor:pointer;text-decoration: none;color: black;">
+
+                            <img src="{% static 'images/09 (1).jpg' %}" alt="" style="width: 50px;height: 50px;border-radius: 100px;object-fit: cover;margin-left: 15px;margin-right: 15px;">
+                            <p style="font-weight: 600;font-size: 14px;line-height: 25px;">{{notification.message}}</p>
+                        </a>
+
+                        {% endfor %}
+                        <!-- <button onclick="closeNotifications()">close</button> -->
+                    </div>
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;margin-left: 0px;" href="{% url 'logout' %}">
+                        <h6><ion-icon name="log-out"></ion-icon></h6>
+                        <h5>Logout</h5>
+                    </a>
+                    {% endif %}
+
+                    <div class="login" style="opacity: 0;user-select: none;">
+                        <h5>USD</h5>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+        </div>
+        <img src="{% static 'images/banner.png' %}" alt="" style="width: 100%;object-fit: contain;margin-top: 120px;pointer-events: none;user-select: none;">
+
+        {% if not profile.is_hospital and not profile.is_shopkeeper %}
+        <!-- <div class="banner-wrap" style="display: flex;justify-content: center;align-items: center;position: relative;margin-top: -9px;">
+            <div class="text" style="position: absolute;text-align: center;z-index: 10;top: 100px;">
+                <h2 style="width: 600px;">Inspiring <span style="color: #3dd6ba;">Better Health </span>Care For Everyone</h2>
+                <p>Nurturing Minds and Inspiring Transformation.</p>
+
+                <h1 class="arrow"><ion-icon name="arrow-down"></ion-icon></h1>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1531924224004-7beee12117a6?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" style="width: 100%;height:55vh;object-fit: cover;margin-top: 100px;filter: brightness(0.7);">
+        </div> -->
+        {% else  %}
+        <!-- <div class="banner-wrap" style="display: flex;justify-content: center;align-items: center;position: relative;margin-top: -29px;">
+            <div class="text" style="position: absolute;text-align: center;z-index: 10;top: 100px;">
+                <h2 style="width: 600px;">Inspiring <span style="color: #3dd6ba;">Better Health </span>Care For Everyone</h2>
+                <p>Healing Horizons: Inside the World of Hospital Care</p>
+
+                <h1 class="arrow"><ion-icon name="arrow-down"></ion-icon></h1>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1520206319821-0496cfdeb31e?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" style="width: 100%;height:55vh;object-fit: cover;margin-top: 100px;filter: brightness(0.7);">
+        </div> -->
+        {% endif %}
+        <!-- <div class="banner-bottom">
+            <div class="details">
+                <h5>MUST HAVE</h5>
+                <h3>Best Selling Products</h3>
+            </div>
+            <img src="Blood-Pressure-and-Sprague-Stethoscope-Kit.jpg" alt="">
+            <img src="Honey-Tulsi-300g.jpg" alt="">
+            <img src="Milk-Powder-900g (1).jpg" alt="">
+            <img src="Pack-of-50-Disposable-Face-Masks.jpg" alt="">
+            <img src="UX-A-01-Non-Contact-Infrared-Thermometer.jpg" alt="">
+            <img src="Vitamin-C-with-Zinc-30-Tablets.jpg" alt="">
+        </div> -->
+        <!-- <div class="first-section">
+            <div class="section1">
+                <img class="img1" src="banner-2-13.jpg" alt="">
+                <img class="img2" src="banner-2-14.jpg" alt="">
+                <img class="img3" src="banner-2-15.jpg" alt="">
+            </div>
+        </div> -->
+       <!-- <img src="{% static 'images/clients.png' %}" alt="" style="width: 100%;"> -->
+        <div class="features" style="background-color: #ffffff;">
+            <div class="feature">
+        <h1>400K+</h1>
+        <h4>Tests Today</h4>
+    </div>
+    <div class="feature">
+        <h1>100K+</h1>
+        <h4>Total Users</h4>
+    </div>
+    <div class="feature">
+        <h1>700K+</h1>
+        <h4>Classes Total</h4>
+    </div>
+    <div class="feature">
+        <h1>500K+</h1>
+        <h4>Blogs Read</h4>
+    </div>
+        </div>
+        <hr>
+        {% if not profile.is_hospital  %}
+
+        {% if not profile.is_doctor %}
+        <div class="section2 what" id="thera">
+
+            <div id="cameraPopup" style="display: none;justify-content: center;align-items: center;flex-direction: column;">
+                <video id="cameraView"  height="240" autoplay muted style="width: 100%;object-fit: cover;"></video>
+                <button id="closeButton" style="padding: 10px;width: 100%;background-color: #852727;color: white;border-radius: 10px;">Close</button>
+            </div>
+            <h1 style="width: 550px;text-align: center;margin-top: 25px;text-transform: uppercase;">Explore <span style="color: #207e6d;">Articles</span>​</h1>
+            <p style="width: 400px;text-align: center;margin-top: -25px;font-weight: 500;opacity: 0.6;">Delve into Insights and Stories from the Medical World</p>
+            <p style="margin-top: -25px;font-weight: 600;color: #138f82;">ALL ARTICLES</p>
+
+                <!-- <p style="font-weight: 600;color: #138f82;margin-left: 16px;">ALL THERAPISTS</p> -->
+                <!-- <select name="city" id="" required style="padding: 10px;border: 2px solid rgb(230, 230, 230);border-radius: 8px;outline: none;" class="city3" onchange="changeHospital(this)">
+                    <option value="">All Doctors</option>
+                        <option value="Alappuzha">Alappuzha</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Thrissur">Thrissur</option>
+                </select> -->
+            </div>
+            <!-- <div class="site-features">
+                <div class="feat">
+
+                    <img src="{% static 'images/09 (1).jpg.png' %}" alt="">
+                    <h3>Sounds Of Healing</h3>
+                    <p>Music Healing</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/pic3.png' %}" alt="">
+                    <h3>Depression Prediction</h3>
+                    <p>Are u Depressed?</p>
+                    <button>Depression<ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/watch.png' %}" alt="">
+                    <h3>Depression Awareness</h3>
+                    <p>View Blogs</p>
+                    <button>View Awareness <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/reading.png' %}" alt="">
+                    <h3>Focus Boosting</h3>
+                    <p>Meditate Now</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+            </div> -->
+
+            <div class="users" style="margin-bottom: 50px;align-items: flex-start;flex-wrap: wrap;margin-top: 25px;">
+
+
+                <div class="blogContainer" style="display: flex;justify-content: center;align-items: flex-center;" id="blogs">
+                    {% for blog in blogs %}
+                    <div class="card" style="width: 24rem;border: 1px solid rgb(210, 210, 210);border-radius: 10px;overflow: hidden;height: fit-content;">
+                        <img src="{{blog.image.url}}" class="card-img-top" alt="blog1" style="height: 200px;object-fit: cover;width: 100%;">
+                        <div class="card-body" style="padding: 0px 10px 8px 18px;">
+                            <h5 class="card-title" style="font-size: 22px;font-weight: 500;margin-top: 15px;">{{blog.name}}</h5>
+                            <p class="descp" style="height: 45px; overflow: hidden;margin-top: 10px;">{{blog.desc}}</p>
+                            <!-- <p class="" style="height: 45px; overflow: hidden;margin-top: 10px;">{{blog.desc}}</p> -->
+                        </div>
+                        <input type="hidden" class="open" value="0">
+                        <h5 style="background-color: #e6e6e6;color: rgb(24, 24, 24);padding: 8px;border-radius: 8px;margin-top: 25px;text-align: center;cursor: pointer;" onclick="showdesc(this.parentNode,this)">Read more</h5>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+        </div>
+
+        </div>
+         <hr>
+         {% endif %}
+
+        {% if request.user.is_authenticated %}
+
+        {% endif %}
+        <!-- <hr> -->
+
+        <hr>
+        {% elif profile.is_hospital %}
+        {% if request.user.is_authenticated %}
+        <div class="section2 what">
+
+            <h1 style="width: 550px;text-align: center;margin-top: 25px;text-transform: uppercase;">Explore <span style="color: #3dd6ba;">Doctor Articles</span>​</h1>
+            <p style="width: 400px;text-align: center;margin-top: -25px;font-weight: 500;opacity: 0.6;">Delve into Insights and Stories from the Medical World</p>
+            <p style="margin-top: -25px;font-weight: 600;color: #138f82;">ALL ARTICLES</p>
+
+            <!-- <div class="site-features">
+                <div class="feat">
+
+                    <img src="{% static 'images/09 (1).jpg.png' %}" alt="">
+                    <h3>Sounds Of Healing</h3>
+                    <p>Music Healing</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/pic3.png' %}" alt="">
+                    <h3>Depression Prediction</h3>
+                    <p>Are u Depressed?</p>
+                    <button>Depression<ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/watch.png' %}" alt="">
+                    <h3>Depression Awareness</h3>
+                    <p>View Blogs</p>
+                    <button>View Awareness <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/reading.png' %}" alt="">
+                    <h3>Focus Boosting</h3>
+                    <p>Meditate Now</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+            </div> -->
+
+            <div class="users" style="margin-bottom: 50px;align-items: flex-start;">
+
+
+            {% for doctor in doctors %}
+            <div style="width: 300px; background-color: #ffffff; border-radius: 10px; padding: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+                <div style="text-align: center;">
+                    <img src="{{doctor.image.url}}" alt="Doctor Image" style="width: 140px; height: 140px; border-radius: 50%; margin-bottom: 20px; object-fit: cover;">
+                    <h3 style="margin-top: 0; font-size: 20px; font-weight: bold; color: #333;">Dr. {{doctor.user.first_name}} {{doctor.user.last_name}}</h3>
+                    <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;">
+                        <p style="font-size: 13px;font-weight: 600; color: #777;margin-top: 10px;"><i class="fas fa-map-marker-alt" style="color: #4caf50;"></i> {{doctor.address}}</p>
+                        <div style="display: flex;gap: 25px;justify-content: center;align-items: center;margin-top: 10px;">
+
+                            <p style="font-size: 13px;font-weight: 600; color: #777;"><i class="fas fa-phone" style="color: #4caf50;"></i> {{doctor.phone}}</p>
+                            <p style="font-size: 13px;font-weight: 600; color: #777;"><i class="fas fa-user-md" style="color: #4caf50;"></i> {{doctor.specialization}}</p>
+                        </div>
+                    </div>
+                </div>
+                <form style="margin-top: 20px;" method="post" action="{% url 'appointment' %}">
+                    {% csrf_token %}
+                    <div class="appointmentForm" style="display: none;">
+
+                        <div style="display: flex; flex-direction: column;">
+                            <label for="appointment-date" style="font-size: 14px;font-weight: 600 ;color: #333; margin-bottom: 5px;">Appointment Date:</label>
+                            <input type="date" id="appointment-date" name="date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column;">
+                            <label for="appointment-time" style="font-size: 14px;font-weight: 600 ;color: #333; margin-bottom: 5px;">Appointment Time:</label>
+                            <input type="time" id="appointment-time" name="time" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;" required>
+                        </div>
+                        <input type="hidden" name="doctor" value="{{doctor.user.username}}">
+                    </div>
+                    {% if not profile.is_hospital %}
+                    {% if not doctor.booked %}
+                    <button type = "button"style="background-color: #4caf50; color: #fff; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%;" onclick="showAppointment(this,this.parentNode)">Schedule Appointment</button>
+                    <button type = "submit"style="background-color: #4caf50; color: #fff; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%;display: none;" class="book">Book Appointment</button>
+                    {% else %}
+                    <button type = "button" style="background-color: #4caf50; color: #fff; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%;" >Appointment Scheduled</button>
+                    {% endif %}
+                    {% endif %}
+                </form>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <!-- <div class="section3" style="margin-bottom: 50px;position: relative;">
+            <div class="third-section">
+                <img src="{% static 'images/banner-2-16.jpg' %}" alt="">
+                <img src="{% static 'images/banner-2-17.jpg' %}" alt="">
+            </div>
+        </div>   -->
+        <div style="max-width: 1100px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <center>
+
+                <h1 style="width: 550px;text-align: center;margin-top: 25px;text-transform: uppercase;"><span style="color: #191919;">FAQ's</span>​</h1>
+                <p style="width: 400px;text-align: center;margin-top: 15px;font-weight: 500;opacity: 0.6;margin-bottom: 50px;">Below are the list of faqs by various users using our app</p>
+            </center>
+            <div class="faq-section" style="margin-bottom: 20px;">
+                <h2 style="color: #444; border-bottom: 2px solid #ddd; padding-bottom: 5px;margin-bottom: 25px;">General Information</h2>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q1: What is mental illness?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A1: Mental illness refers to a wide range of mental health conditions that affect mood, thinking, and behavior. Examples include depression, anxiety disorders, schizophrenia, eating disorders, and addictive behaviors.</p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q2: How common is mental illness?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A2: Mental illnesses are very common. According to the World Health Organization, one in four people in the world will be affected by mental or neurological disorders at some point in their lives.</p>
+                </div>
+            </div>
+
+            <div class="faq-section" style="margin-bottom: 20px;">
+                <h2 style="color: #444; border-bottom: 2px solid #ddd; padding-bottom: 5px;margin-bottom: 25px;">Symptoms and Diagnosis</h2>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q3: What are the signs and symptoms of mental illness?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A3: Symptoms vary depending on the condition but can include changes in mood, personality, personal habits, and social withdrawal. Specific symptoms include excessive fear, sadness, extreme mood changes, and changes in eating or sleeping patterns.</p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q4: How is mental illness diagnosed?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A4: Diagnosis typically involves a thorough evaluation by a mental health professional, which includes a physical exam, a series of questions about your symptoms and medical history, and sometimes, psychological tests.</p>
+                </div>
+            </div>
+
+            <div class="faq-section" style="margin-bottom: 20px;">
+                <h2 style="color: #444; border-bottom: 2px solid #ddd; padding-bottom: 5px;margin-bottom: 25px;">Treatment and Support</h2>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q5: What treatments are available for mental illness?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A5: Treatments can include psychotherapy (such as cognitive behavioral therapy), medications (such as antidepressants and antipsychotics), lifestyle changes, and support groups. Often, a combination of treatments is most effective.</p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q6: Can mental illness be cured?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A6: Many mental illnesses can be effectively managed and treated, but some cannot be cured. Treatment can help individuals lead full and productive lives.</p>
+                </div>
+            </div>
+
+            <div class="faq-section" style="margin-bottom: 20px;">
+                <h2 style="color: #444; border-bottom: 2px solid #ddd; padding-bottom: 5px;margin-bottom: 25px;">Seeking Help</h2>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q7: When should I seek help for mental health issues?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A7: If you are experiencing symptoms that are affecting your daily life, relationships, or work, it's important to seek help. Early intervention can improve outcomes significantly.</p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 15px;">
+                    <p class="faq-question" style="font-weight: bold; color: #555;">Q8: How do I find a mental health professional?</p>
+                    <p class="faq-answer" style="margin-top: 5px; color: #666;">A8: You can find a mental health professional by getting a referral from your primary care doctor, checking with your health insurance provider, or searching online directories of licensed professionals in your area.</p>
+                </div>
+            </div>
+        </div>
+        <center>
+
+            <h1 id="feeds" style="width: 550px;text-align: center;margin-top: 25px;text-transform: uppercase;"><span style="color: #262626;">FeedBacks </span>​</h1>
+            <p style="width: 400px;text-align: center;margin-top: 15px;font-weight: 500;opacity: 0.6;">Below are the list of feedbacks by various users using our app</p>
+
+            <div class="comments" style="width: 800px;position: relative;margin-bottom: 55px;margin-top: 35px;">
+            {% for comment in comments %}
+            <div class="comment" style="display: flex;gap: 25px;padding-left: 25px;padding-right: 25px;margin-bottom: 55px;width: 100%;">
+                <img src="data:image/jpeg;base64,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" alt="" style="width: 40px;height: 40px;border-radius: 100px;object-fit: cover;">
+                <div style="display: flex;justify-content: center;align-items: flex-start;flex-direction: column;">
+                    <h5 style="text-align: left;font-size: 16px;font-weight: 600;margin-bottom: 8px;background-color: #07a44b;color: white;padding: 5px 15px 5px 15px;width: fit-content;border-radius: 100px;font-size: 13px;">{{comment.username}}</h5>
+                    <p style="margin-left: 0;padding: 0;font-weight: 600;font-size: 15px;">{{comment.comment}}</p>
+                    {% if comment.reply != "" %}
+                    <h3 style="font-weight: 600;font-size: 14px;margin-top: 15px;color: #88619a;display: flex;justify-content: center;align-items: center;cursor: pointer;gap: 8px;" onclick="showReply(this,this.parentNode)">View Reply <ion-icon name="caret-down"></ion-icon></h3>
+                    <div class="comment reply" style="display: none;gap: 25px;margin-left: -65px;padding-right: 0px;margin-top: 45px;position: relative;">
+                        <img src="{% static 'images/arrow.png' %}" alt="" style="z-index: 10;width: 200px;height: 40px;object-fit: cover;position: absolute;width: 80px;top: -45px;left: 0px;opacity: 0.2;">
+                        <img src="{% static 'images/09 (1).jpg' %}" alt="" style="width: 40px;height: 40px;border-radius: 100px;object-fit: cover;">
+
+                        <div style="display: flex;justify-content: center;align-items: flex-start;flex-direction: column;">
+                            <h5 style="text-align: left;font-size: 16px;font-weight: 600;margin-bottom: 5px;background-color: #eeeeee;color: rgb(37, 37, 37);padding: 5px 15px 5px 15px;width: fit-content;border-radius: 100px;font-size: 13px;">Admin</h5>
+                            <p style="margin-left: 0;padding: 0;font-weight: 600;font-size: 15px;">{{comment.reply}}</p>
+
+                            <!-- <p style="margin-left: 15px;padding: 0;font-weight: 600;opacity: 0.7;margin-top: 15;">Admin: Yeah its is</p> -->
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <p style="padding: 0;font-weight: 600;opacity: 0.7;margin-top: 15;position: absolute;right: 10px;font-size: 14px;padding: 5px 15px 5px 15px;background-color: #ebebeb;border-radius: 100px;">{{comment.date}}</p>
+
+            </div>
+             {% endfor %}
+        </div>
+        </center>
+        <center>
+            <div style="background-color: rgb(30, 30, 30);padding-top: 20px;padding-bottom: 20px;position: relative;" class="about">
+                <!-- <img src="{% static 'images/pattern.png' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute !important; top: 0;left: 0;opacity: 0.15;"> -->
+                <h2 style="color: rgb(255, 255, 255);font-weight: 600;">About US</h2>
+                <p style="width: 650px;text-align: center;color: #5d5d5d;line-height: 30px;margin-top: 25px;font-weight: 600;">Our mission is to empower individuals to take control of their mental health through accessible, evidence-based stress relief techniques. We believe that everyone deserves to live a life free from the debilitating effects of stress and anxiety. </p>
+            </div>
+
+        </center>
+
+
+        <footer style="background-color: rgb(30, 30, 30);width: 100%;height: 60px;color: white;display: flex;justify-content: center;align-items: center;gap: 45px;" class="foot">
+            <!-- <h3>Follow us on</h3> -->
+            <h4><ion-icon name="logo-facebook"></ion-icon></h4>
+            <h4><ion-icon name="logo-twitter"></ion-icon></h4>
+            <h4><ion-icon name="logo-instagram"></ion-icon></h4>
+        </footer>
+
+
+    </div>
+    <script src="{% static 'js/index.js' %}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<script>
+
+    const openCameraButton = document.getElementById('openCameraButton');
+const cameraPopup = document.getElementById('cameraPopup');
+const closeButton = document.getElementById('closeButton');
+const cameraView = document.getElementById('cameraView');
+
+openCameraButton.addEventListener('click', async () => {
+    try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        cameraView.srcObject = mediaStream;
+        cameraPopup.style.display = 'block'; // Show the popup
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        // Handle permission denial or other errors gracefully (optional)
+    }
+});
+
+closeButton.addEventListener('click', () => {
+    cameraPopup.style.display = 'none'; // Hide the popup
+    // Optionally stop the media stream to prevent resource usage
+    if (cameraView.srcObject) {
+        cameraView.srcObject.getTracks().forEach(track => track.stop());
+        cameraView.srcObject = null;
+    }
+});
+    document.addEventListener('DOMContentLoaded', function () {
+            var questions = document.querySelectorAll('.faq-question');
+            questions.forEach(function (question) {
+                question.addEventListener('click', function () {
+                    var answer = this.nextElementSibling;
+                    if (answer.style.display === 'block') {
+                        answer.style.display = 'none';
+                    } else {
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+        });
+
+        function checkDate(element,username,parent){
+        console.log(element.value);
+        var data = new FormData()
+
+      data.append("date", element.value)
+      data.append("username", username)
+
+      data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+      $.ajax({
+
+          method:"POST",
+          url:'/checkDate/',
+          processData:false,
+          contentType:false,
+          // MimeType:"multipart/form-data",
+          data:data,
+          success:function(res){
+
+            var times = parent.querySelector('.times')
+            times.innerHTML = '';
+            console.log(times);
+            for(var i = 0;i<res.times.length;i++){
+
+                var time = document.createElement('option')
+                time.classList.add('time-option')
+                time.value = res.times[i]
+                time.text = res.times[i]
+                console.log(time);
+                times.append(time)
+            }
+            console.log(times.innerHTML);
+
+          }
+      })
+    }
+
+    function showAppointment(currentElement,parentElement){
+        currentElement.style.display = 'none'
+        parentElement.querySelector('.appointmentForm').style.display = "block"
+        parentElement.querySelector('.book').style.display = "block"
+    }
+
+    function sendData(){
+
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.userName').value)
+        data.append("password", document.querySelector('.password').value)
+
+
+
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkLogin1/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                localStorage.setItem("message",res.message)
+                console.log(res.message);
+                if(res.message == 0){
+
+                    login(data)
+                    localStorage.setItem("username",document.querySelector('.userName').value)
+                    localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+                    document.querySelector('.error').style.display = "flex"
+
+                }
+
+
+            }
+        })
+    }
+
+    function login(data){
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/login1/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                console.log("it worked :)")
+
+                setTimeout(()=>{
+
+                    location.reload();
+                },1000)
+            }
+            })
+    }
+
+    function signup(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/register/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup2(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerShop/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup3(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerHosp/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup4(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerDoc/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function checkSignup(event){
+        event.preventDefault()
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.username1').value)
+        data.append("email", document.querySelector('.email1').value)
+        data.append("password", document.querySelector('.password1').value)
+        data.append("phone", document.querySelector('.phone').value)
+        data.append("address", document.querySelector('.address').value)
+        data.append("image", $("input[id^='file']")[0].files[0])
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignup/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (document.querySelector('.email1').value.match(validRegex)) {
+                            document.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (document.querySelector('.username1').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.phone').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.address').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.password1').value == "" ) {
+
+                            alert("please fill the password!");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(document.querySelector('.password1').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    document.querySelector('.err2').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup(data)
+                            }
+
+
+            }
+        })
+    }
+
+    function checkSignup2(){
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.username2').value)
+        data.append("email", document.querySelector('.email2').value)
+        data.append("password", document.querySelector('.password2').value)
+        data.append("phone", document.querySelector('.phone2').value)
+        data.append("address", document.querySelector('.address2').value)
+        data.append("type", document.querySelector('.type2').value)
+
+        data.append("image", $("input[id^='file2']")[0].files[0])
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (document.querySelector('.email2').value.match(validRegex)) {
+                            document.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (document.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(document.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    document.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup2(data)
+                            }
+
+
+            }
+        })
+    }
+
+    function checkSignup4(element){
+        var data = new FormData()
+
+        data.append("username", element.querySelector('.username2').value)
+        data.append("firstname", element.querySelector('.first').value)
+        data.append("lastname", element.querySelector('.last').value)
+        data.append("email", element.querySelector('.email2').value)
+        data.append("password", element.querySelector('.password2').value)
+        data.append("phone", element.querySelector('.phone2').value)
+        data.append("address", element.querySelector('.address2').value)
+        data.append("image", $("input[id^='file4']")[0].files[0])
+        data.append("type", element.querySelector('.type').value)
+        data.append("time", element.querySelector('.time').value)
+        data.append("city", element.querySelector('.city3').value)
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (element.querySelector('.email2').value.match(validRegex)) {
+                            // element.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (element.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(element.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    element.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup4(data)
+                            }
+
+
+            }
+        })
+    }
+
+    var currentDate = new Date();
+
+// Format the date as yyyy-mm-dd
+
+
+    // Set the default value of the input field
+    // document.getElementById('appointment-date').value = formattedDate;
+
+
+
+    function checkSignup3(element){
+        var data = new FormData()
+
+        data.append("username", element.querySelector('.username2').value)
+        data.append("email", element.querySelector('.email2').value)
+        data.append("password", element.querySelector('.password2').value)
+        data.append("phone", element.querySelector('.phone2').value)
+        data.append("address", element.querySelector('.address2').value)
+        data.append("image", $("input[id^='file3']")[0].files[0])
+        data.append("type", element.querySelector('.type').value)
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (element.querySelector('.email2').value.match(validRegex)) {
+                            // element.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (element.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(element.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    element.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup3(data)
+                            }
+
+
+            }
+        })
+    }
+
+
+
+    function closeUpload(){
+        document.querySelector('.upload-bill').style.display = "none"
+    }
+
+    function showUpload(){
+        document.querySelector('.upload-bill').style.display = "flex"
+    }
+     function showBlog(){
+        document.querySelector('.blog-wrapper').style.display = "flex"
+    }
+
+
+    function scrollToContact(){
+        document.querySelector('.foot').scrollIntoView()
+    }
+    function scrollToAbout(){
+        document.querySelector('.about').scrollIntoView()
+    }
+
+    function showMsg(){
+            document.querySelector('.message').style.display = "block"
+
+        }
+
+        function closeMsg(){
+            document.querySelector('.message').style.display = "none"
+        }
+
+        function sendMsg(){
+
+if(document.querySelector('.text-msg').value !=""){
+var data = new FormData();
+
+data.append("message", document.querySelector('.text-msg').value)
+data.append("from_user", document.querySelector('.from_user').value)
+data.append("to_user", document.querySelector('.to_user').value)
+
+data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+$.ajax({
+
+    method:"POST",
+    url:'/sendMsg1/',
+    processData:false,
+    contentType:false,
+    MimeType:"multipart/form-data",
+    data:data,
+    success:function(res){
+
+        var chat = document.createElement('div')
+        chat.classList.add('right-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = document.querySelector('.text-msg').value
+        chat.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat)
+        document.querySelector('.text-msg').value = "";
+
+            $('.messages').scrollBottom($(".messages").height());
+
+    }
+    })
+
+}
+}
+
+$('.text-msg').keydown(function(event) {
+
+var data = new FormData();
+
+if(document.querySelector('.text-msg').value !=""){
+
+data.append("message", document.querySelector('.text-msg').value)
+data.append("from_user", document.querySelector('.from_user').value)
+data.append("to_user", document.querySelector('.to_user').value)
+
+data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+if (event.keyCode == 13) {
+    $.ajax({
+
+    method:"POST",
+    url:'/sendMsg1/',
+    processData:false,
+    contentType:false,
+    MimeType:"multipart/form-data",
+    data:data,
+    success:function(res){
+
+
+
+        var chat = document.createElement('div')
+        chat.classList.add('right-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = document.querySelector('.text-msg').value
+        chat.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat)
+
+        var chat_from = document.createElement('div')
+        chat_from.classList.add('left-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = res.result
+        chat_from.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat_from)
+
+        document.querySelector('.text-msg').value = "";
+        document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight;
+
+    }
+    })
+return false;
+}
+}
+});
+
+    function showMessages(element){
+        document.querySelector('.wrap-chats').style.display = "none"
+        document.querySelector('.wrap-msg').style.display = "block"
+
+        var data = new FormData();
+
+
+        // data.append("message", document.querySelector('.text-msg').value)
+        data.append("from_user", element.querySelector('.from_user1').value)
+        data.append("to_user", element.querySelector('.to_user1').value)
+        // console.log(document.querySelector('.to_user').value);
+        document.querySelector('.to_user').value = document.querySelector('.to_user1').value
+        document.querySelector('.global_to').value = document.querySelector('.to_user1').value
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+        var msgs = document.querySelectorAll('.left-chat')
+
+        for(var i =0;i<msgs.length;i++){
+            msgs[i].remove()
+        }
+
+        var msgs2 = document.querySelectorAll('.right-chat')
+
+        for(var i =0;i<msgs2.length;i++){
+            msgs2[i].remove()
+        }
+
+        $.ajax({
+
+            method:"POST",
+            url:'/showMessages/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                document.querySelector('.chat-pic').src = res.image
+                document.querySelector('.avg').src = res.avg
+                document.querySelector('.cht-username').innerText = element.querySelector('.to_user1').value
+                console.log(res.message[0].message);
+                document.querySelector('.to_user').value =  element.querySelector('.to_user1').value
+                for(var i =0 ;i<res.message.length;i++){
+                    if(res.message[i].from_user == element.querySelector('.from_user1').value){
+                    var chat = document.createElement('div')
+                    chat.classList.add('right-chat')
+
+                    var h4 = document.createElement('h4')
+                    h4.innerText = res.message[i].message
+                    chat.append(h4)
+
+                    var messages = document.querySelector('.messages')
+
+                    messages.appendChild(chat)
+                    // document.querySelector('.text-msg').value = "";
+                    }
+
+                    else{
+
+                        var chat = document.createElement('div')
+                        chat.classList.add('left-chat')
+
+                        var h4 = document.createElement('h4')
+                        h4.innerText = res.message[i].message
+                        chat.append(h4)
+
+                        var messages = document.querySelector('.messages')
+
+                        messages.appendChild(chat)
+                        // document.querySelector('.text-msg').value = "";
+
+                    }
+
+                }
+                document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight;
+
+            }
+            })
+
+
+    }
+
+    function back(){
+        document.querySelector('.wrap-msg').style.display = "none";
+        document.querySelector('.wrap-chats').style.display = "block";
+    }
+
+    function changeHospital(element){
+        console.log("-------------------"+element.value);
+        var doctors = document.querySelectorAll('.doctors')
+        var count = 0;
+        for(var i = 0;i<doctors.length;i++){
+            if(doctors[i].classList.contains(element.value)){
+                doctors[i].style.display = "block"
+                count = count + 1
+            }
+
+            else{
+                doctors[i].style.display = "none"
+            }
+            if(count == 0){
+                document.querySelector('.no').style.display = "flex"
+            }
+            else{
+                document.querySelector('.no').style.display = "none"
+            }
+        }
+        if(element.value == ""){
+            document.querySelector('.no').style.display = "none"
+            for(var i = 0;i<doctors.length;i++){
+                doctors[i].style.display = "block"
+                // count = count + 1
+
+            }
+        }
+    }
+
+    function addToCart(pk,element){
+
+      var data = new FormData()
+
+      data.append("pk", pk)
+      data.append("quantity",1)
+
+
+
+      data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+      $.ajax({
+
+          method:"POST",
+          url:'/addToCart/',
+          processData:false,
+          contentType:false,
+          // MimeType:"multipart/form-data",
+          data:data,
+          success:function(res){
+            console.log(element);
+            element.innerHTML = '<ion-icon name="cart"></ion-icon> Added'
+
+          }
+      })
+  }
+
+  function share(url){
+    console.log(url);
+    navigator.clipboard.writeText(url)
+    document.querySelector('.copy').style.display = "flex"
+    setTimeout(()=>{
+        document.querySelector('.copy').style.display = "none"
+    },9000)
+  }
+
+  function showdesc(ele,elem){
+    if(ele.querySelector('.open').value == "0"){
+        ele.querySelector('.open').value = "1"
+        ele.querySelector('.descp').style.height = "fit-content"
+        elem.innerText = "Hide Details"
+    }
+    else{
+        ele.querySelector('.open').value = "0"
+        ele.querySelector('.descp').style.height = "45px"
+        elem.innerText = "Read More"
+    }
+  }
+ var formattedDate = currentDate.toISOString().slice(0, 10);
+
+    // Set the min attribute of the input field
+    // document.getElementById('appointment-date').setAttribute('min', formattedDate);
+
+
+
+  </script>
+</body>
+</html>

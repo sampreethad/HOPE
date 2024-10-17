@@ -1,0 +1,1886 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+           p.subtitle {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            opacity: 0.6;
+            margin-bottom: 50px;
+        }
+        .faq-section {
+            margin-bottom: 20px;
+        }
+        .faq-section h2 {
+            color: #444;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 25px;
+        }
+        .faq-item {
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+        }
+        .faq-answer {
+            margin-top: 15px;
+            color: #666;
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body id="style-2">
+    
+    <div id="prescriptionPopup" class="prespop" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; border: 1px solid #000; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+       
+        <h2 style="margin: 0 0 10px 0; text-align: center; font-size: 24px;">Prescription</h2>
+        
+        <div style="font-weight: bold; margin-top: 10px;">Doctor Name:</div>
+        <div style="margin-top: 5px; margin-bottom: 10px; font-size: 18px;" class="doctor">Dr. John Smith</div>
+    
+        <div style="font-weight: bold; margin-top: 10px;">Date:</div>
+        <div style="margin-top: 5px; margin-bottom: 10px; font-size: 18px;" class="date">2024-06-14</div>
+    
+        <div style="font-weight: bold; margin-top: 10px;">Symptoms:</div>
+        <div style="margin-top: 5px; margin-bottom: 10px; font-size: 18px;" class="symptom">Fever, cough, sore throat</div>
+    
+        <div style="font-weight: bold; margin-top: 10px;">Prescription:</div>
+        <div style="margin-top: 5px; margin-bottom: 10px; font-size: 18px;" class="pres">Paracetamol 500mg, twice a day</div>
+    
+        <button onclick="downloadScreenshot()" class="download" style="display: block; width: 100%; padding: 10px; font-size: 16px; background-color: #007BFF; color: #fff; border: none; cursor: pointer; text-align: center; margin-top: 10px;">
+            <ion-icon name="download-outline" style="vertical-align: middle;"></ion-icon> Download
+        </button>
+        
+    </div>
+    <div class="login-wrapper">
+        <div class="main" style="margin-top: -180px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;z-index: 100;font-size: 15px;" onclick="closeLogin()"><i class="fa-solid fa-x"></i></h2>
+            <img src="{% static 'images/95635-happy-boy.gif' %}" alt="" style="width: 80px;transform: rotate(0deg); margin-bottom: 28px;margin-top: 5px;">
+            <h1 style="color: black;">Signin</h1>
+            <p>Login into your account now</p>
+
+            <div class="inputs">
+                <input type="text" placeholder="username" class="userName" style="margin-bottom: 10px;"><br>
+                <input type="password" placeholder="password" class="password"><br>
+            </div>
+            <p style="display: none;justify-content: center;align-items: center;width: 100%;margin-top: 25px;opacity: 1;margin-bottom: 10px;" class="error">Invalid login credentials</p>
+
+            <button onclick="sendData()">Login into my account</button>
+        </div>
+    </div>
+
+    <div class="signup-wrapper">
+        <div class="main" style="width: 380px;margin-top: -160px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignup()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1  style="color: black;">Signup</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+
+                    <input type="text" placeholder="username" class="username1"><br>
+                    <input type="email" placeholder="email address" class="email1"><br>
+                </div>
+                <input type="number" placeholder="phone number" class="phone">
+                <input type="text" placeholder="Address" class="address"><br>
+                <input type="file" required accept="Image/*" name="image" id="file">
+                <input type="password" placeholder="password" class="password1"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err2">Username already exists</p>
+
+            <button onclick="checkSignup()">Create a new account account</button>
+        </div>
+    </div>
+
+    <h2 style="position: fixed;top: 120px;left: 42%;background-color: #f0f0f0;color: rgb(37, 37, 37);padding: 8px;width: 250px;border-radius: 5px;font-size: 16px;z-index: 1500;font-weight: 600;text-align: center;" class="copy">Copied To Clipboard</h2>
+
+    <div class="shop-wrapper">
+        <div class="main" style="width: 380px;margin-top: -160px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupShop()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1  style="color: black;">Signup Shopkeeper</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+
+                    <input type="text" placeholder="Shop name" class="username2"><br>
+                    <input type="email" placeholder="email address" class="email2"><br>
+                </div>
+                <input type="number" placeholder="phone number" class="phone2">
+                <input type="text" placeholder="Address" class="address2"><br>
+                <select name="type" id="" class="type2">
+                    <option value="">Select shop type</option>
+                    <option value="Medicine">Medicine Shop</option>
+                    <option value="Device">Device Shop</option>
+                    <option value="Book">Book Shop</option>
+                </select>
+                <input type="file" required accept="Image/*" name="image" id="file2">
+                <input type="password" placeholder="password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Shop name already exists</p>
+
+            <button onclick="checkSignup2()">Create a new account account</button>
+        </div>
+    </div>
+    <div class="hosp-wrapper">
+        <div class="main" style="width: 380px;margin-top: -190px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupHosp()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Hospital Signup</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="Hospital name" class="username2"><br>
+                    <input type="email" placeholder="Email address" class="email2"><br>
+                </div>
+                <input type="number" placeholder="Phone number" class="phone2">
+                <input type="text" placeholder="Address" class="address2"><br>
+
+                <select name="type" id="" class="type">
+                    <option value="">Select hospital type</option>
+                    <option value="General">General Hospital</option>
+                    <option value="Specialty">Specialty Hospital</option>
+                    <option value="Psychiatric">Psychiatric Hospital</option>
+                </select>
+                <input type="file" required accept="Image/*" name="image" id="file3">
+                <input type="password" placeholder="Password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Hospital name already exists</p>
+
+            <button onclick="checkSignup3(this.parentNode)">Create a new account</button>
+        </div>
+    </div>
+
+    <div class="doc-wrapper">
+        <div class="main" style="width: 380px;margin-top:-250px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignupDoctor()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Doctor Signup</h1>
+            <p>Create your new account now</p>
+
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="First name" class="first"><br>
+                    <input type="text" placeholder="Last name" class="last"><br>
+                </div>
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+                    <input type="text" placeholder="Doctor name" class="username2"><br>
+                    <input type="email" placeholder="Email address" class="email2"><br>
+                </div>
+                <input type="number" placeholder="Phone number" class="phone2">
+                <div style="display: flex;gap: 15px;">
+
+                    <input type="text" placeholder="Address" class="address2">
+                    <select name="city" id="" required style="height: 45px;" class="city3">
+                        <option value="">District</option>
+                            <option value="Alappuzha">Alappuzha</option>
+                            <option value="Ernakulam">Ernakulam</option>
+                            <option value="Idukki">Idukki</option>
+                            <option value="Kannur">Kannur</option>
+                            <option value="Kasaragod">Kasaragod</option>
+                            <option value="Kollam">Kollam</option>
+                            <option value="Kottayam">Kottayam</option>
+                            <option value="Kozhikode">Kozhikode</option>
+                            <option value="Malappuram">Malappuram</option>
+                            <option value="Palakkad">Palakkad</option>
+                            <option value="Pathanamthitta">Pathanamthitta</option>
+                            <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                            <option value="Thrissur">Thrissur</option>
+                    </select>
+                </div>
+
+                <select name="type" id="" class="type">
+                    <option value="">Select specialization</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Endocrinology">Endocrinology</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="General Surgery">General Surgery</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Orthopedics">Orthopedics</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                    <option value="Psychiatry">Psychiatry</option>
+                    <option value="Radiology">Radiology</option>
+                    <option value="Urology">Urology</option>
+                </select>
+
+
+                <input type="text" placeholder="Available time eg. 8:30AM, 4:45PM" class="time"><br>
+                <input type="file" required accept="Image/*" name="image" id="file4">
+                <input type="password" placeholder="Password" class="password2"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err3">Hospital name already exists</p>
+
+            <button onclick="checkSignup4(this.parentNode)">Create a new account</button>
+        </div>
+    </div>
+
+
+    <div class="upload-bill">
+
+        <form method="POST" action="" enctype="multipart/form-data" style="top: 180px;">
+            <img src="{% static 'images/4403214_18410.jpg' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute;top: 0;opacity: 0.9;">
+            {% csrf_token %}
+            <div class="circle" style="width: 650px;height: 550px;border-radius: 100px;background-color: #256790;filter: blur(80px);position: absolute;top: 350px;opacity: 0.1;"></div>
+
+            <h4 onclick = "closeUpload()" style="position: absolute;top: 15px;right: 15px;width: 30px;height: 30px;border-radius: 100px;background-color: rgb(188, 43, 43);color: white;display: flex;justify-content: center;align-items: center;cursor: pointer;"><i class="fa-solid fa-xmark"></i></h4>
+            <!-- <h3 style="font-weight: 600;margin-top: 15px;text-align: center;display: flex;margin-top: 8px;margin-top: 25px;background-color: #2ba74e;color: rgb(255, 255, 255);padding: 8px 25px 8px 25px;border-radius: 5px;font-size: 16px;position: relative;z-index: 10;text-transform: uppercase;margin-bottom: 10px;" >product upload</h3> -->
+            <h1 style="position: relative;z-index: 1;margin-bottom: 10px;text-transform: uppercase;font-size: 23px;margin-top: 18px;">Welcome {{request.user.username }}</h1>
+            <p>Enter the product details below</p>
+            <img src="{% static 'images/medicine.png' %}" alt="" style="position: relative;z-index: 1;width: 60%;height: 300px;object-fit: contain;margin-bottom: 25px;" class="imageMed">
+            <button style="position: relative;padding: 10px;width: 180px;background-color: #88619a;color: white;border: none;outline: none;border-radius: 5px;font-weight: 600;font-size: 16px;">Choose Image <input type="file" name="image" id="" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;opacity: 0;" required onchange="setProfilePic(this)"></button>
+            <h2 style="margin-top: 25px;text-transform: uppercase;">Product Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder="Name" required name = "name">
+                <input type="number" placeholder="Stock" required min="0" name="dosage">
+                <input type="number" placeholder="Price" required min="1" name="price">
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+
+                <!-- <input type="text" placeholder="Active Ingredient" name="activeIngredient" required> -->
+
+                <!-- <select name="activeIngredient" id="" required>
+                    <option value="">Select Origin</option>
+                        <option value="Alappuzha">Alappuzha</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Thrissur">Thrissur</option>
+                </select> -->
+                {% if profile.shopType == "Book" %}
+                <input type="text" placeholder="Author Name" required name = "activeIngredient">
+                <select id="route" name="route" required>
+                    <option value="">Select Genre</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Science Fiction">Science Fiction</option>
+
+                </select>
+                {% elif profile.shopType == "Medicine" %}
+                <input type="text" placeholder="Manufacturer name" required name = "activeIngredient">
+                <select name="route" id="" required>
+                    <option value="">Select Administration Method</option>
+                <option value="Oral">Oral</option>
+                <option value="Transdermal">Transdermal</option>
+                <option value="Intravenous">Intravenous</option>
+                <option value="Intramuscular">Intramuscular</option>
+                <option value="Subcutaneous">Subcutaneous</option>
+                </select>
+                {% endif %}
+
+                <!-- <select id="route" name="route" required>
+                    <option value="">Select Type</option>
+                    <option value="Herb">Herb</option>
+                    <option value="Fruits">Fruit</option>
+                    <option value="Vegetable">Vegetable</option>
+
+
+                </select> -->
+            </div>
+
+            <!-- <h2 style="text-transform: uppercase;">Shopkeeper Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder='Shopkeeper Name' name="manufacturerName" required>
+                <input type="text" placeholder="Address" name="manufacturerAddress" required>
+
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <select id="country" name="manufacturerCountry" class="form-control" required>
+                    <option value="">Select District</option>
+                    <option value="Alappuzha">Alappuzha</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Thrissur">Thrissur</option>
+                </select>
+                <input type="text" placeholder="Phone Number" name="manufacturerContactNumber" required>
+
+            </div> -->
+
+            <!-- <input type="text" id="ins-payment" name="ins-payment" placeholder="Insurance Payment"><br> -->
+            <!-- <input type="text" id="patient-responsibility" name="patient-responsibility" placeholder="Patient Responsibility"><br> -->
+
+            <input type="submit" value="Upload Product" style="background-color: #27924c;color: white;width: 94.5%;">
+        </form>
+
+    </div>
+
+
+    <div class="container">
+        <div class="message" style="z-index: 1500;">
+
+            <div class="wrap-chats">
+                <div class="top-msg">
+
+                    <div class="profile-chat">
+                        <!-- <img src="{{gig.avatar}}" alt=""> -->
+                        <div>
+                            <h3><ion-icon name="chatbubble-ellipses" style="color: #07a44b;margin-right: 10px;"></ion-icon> Messages</h3>
+                            <!-- <p>Avg. response time : {{gig.response_time}}hr</p> -->
+                        </div>
+                    </div>
+                    <h5 onclick="closeMsg()"><i class="fa-solid fa-xmark"></i></h5>
+                </div>
+
+                <div class="chats">
+                    {% for chat in chats %}
+                    <div class="chat" onclick="showMessages(this)">
+                        <input type="hidden" value="{{request.user.username}}" class="from_user1">
+                        <input type="hidden" class="to_user1" value="{{chat.username}}">
+                        <img src="{% static 'images/user.png' %}" alt="">
+                        <div class="chat-details">
+                            <h3 >{{chat.username}}</h3>
+                            <p>click to view message</p>
+                        </div>
+                        <h5>10:25Pm</h5>
+                    </div>
+                    {% endfor %}
+
+
+
+                </div>
+            </div>
+            <input type="hidden" class="global_to" value="">
+            <input type="hidden" class="global_from" value="{{request.user.username}}">
+
+            <div class="wrap-msg" style="position: relative;height: 100%;display: none;">
+                <div class="top-msg">
+                    <div class="profile-chat">
+                        <h4 style="width: 25px;height: 25px;border-radius: 8px;background-color: #07a44b;color: white;display: flex;justify-content: center;align-items: center;" onclick="back()"><ion-icon name="arrow-back-outline"></ion-icon></h4>
+                        <img src="{% static 'images/09 (1).jpg' %}" alt="" class="chat-pic">
+                        <div>
+                            <h3 class="cht-username">ads</h3>
+                            <p class="avg">Avg. response time : 2hr</p>
+                        </div>
+                    </div>
+                    <h5 onclick="closeMsg()"><i class="fa-solid fa-xmark"></i></h5>
+                </div>
+
+                <div class="messages">
+
+
+
+
+                </div>
+
+                <input type="hidden" value = "1" class = "to_user">
+                <input type="hidden" value = "{{request.user.username}}" class = "from_user">
+
+                <div class="msg-options">
+                    <input type="text" placeholder="Type your message here" class="text-msg">
+                    <button onclick="sendMsg()" style="cursor: pointer;"><ion-icon name="send" ></ion-icon></button>
+                </div>
+
+        </div>
+
+        </div>
+        {% if request.user.is_authenticated %}
+        <button onclick="showMsg()" style="transition: 0.3s;cursor: pointer;" class="message-button pulse"><ion-icon name="chatbox-ellipses"></ion-icon></button>
+        {% endif %}
+        <div class="navbar" style="position: fixed;top: 0;width: 100%;z-index: 150;background-color: white;">
+            <center>
+                <img src="https://th.bing.com/th/id/OIP.A_hecpj07ipTwk5ZvtWw_AHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1.3" alt="" style="width: 100px;height: 100px;object-fit: cover;">
+            </center>
+            <div class="navbar1">
+                <div style="width: 1200px;display: flex;justify-content: space-between;align-items: center;padding-left: 45px;">
+                    <div style="display: flex;justify-content: center;align-items: center;gap: 35px;">
+
+                        <h1>Welcome {{request.user.username}} to hope!</h1>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'homepage' %}">
+                            <h6><ion-icon name="home"></ion-icon></h6>
+                            <h5>Home</h5>
+                        </a>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'therapists' %}">
+                            <h6><ion-icon name="person-circle"></ion-icon></h6>
+                            <h5>Therapists</h5>
+                        </a>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'appointmentsall' %}">
+                            <h6><ion-icon name="calendar"></ion-icon></h6>
+                            <h5>Appointments</h5>
+                        </a>
+                        <a class="login" style="cursor: pointer; text-decoration: none; color: black; position: relative;" href="{% url 'yoga' %}">
+                            <h6><ion-icon name="fitness"></ion-icon></h6>
+                            <h5>Yoga Classes</h5>
+                        </a>
+
+                    </div>
+                    <div class="login-details">
+                        {% if not request.user.is_authenticated %}
+                        <div class="login" onclick="showLogin()" style="cursor: pointer;">
+                            <h6><ion-icon name="log-in"></ion-icon></h6>
+                            <h5>Login</h5>
+                        </div>
+                        <div class="login" onclick="showSignup()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="person-add"></ion-icon></h6>
+                            <h5>Signup</h5>
+                        </div>
+                        <div class="login" onclick="showSignupDoctor()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="medical"></ion-icon></h6>
+                            <h5>Signup Doctor</h5>
+                        </div>
+                        <!-- <div class="login" onclick="showSignupHospital()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="medical"></ion-icon></h6>
+                            <h5>Hospital Signup</h5>
+                        </div> -->
+                    {% else %}
+                    {% if profile.is_shopkeeper %}
+                    <div class="login" style="cursor: pointer;" onclick="showUpload()">
+                        <img src="{% static 'images/en.jpg' %}" alt="">
+                        <h5><ion-icon name="add-outline"></ion-icon> Add Product</h5>
+                    </div>
+                    {% endif %}
+
+
+
+                    {% if not profile.is_hospital %}
+                    <!-- <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;cursor: default;border: 2px solid rgb(255, 255, 255);padding: 5px 15px 5px 15px;border-radius: 100px;background-color: #07a44b;color: white;gap: 5px;" >
+                        <h6 style="font-weight: 600;color: white;">₹</h6>
+                        <h5 style="color: white;">{{profile.balance}}</h5>
+
+                    </a> -->
+                    {% endif %}
+                    {% if not profile.is_doctor %}
+
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;" onclick="showNotifications()">
+                        <h6><ion-icon name="notifications"></ion-icon></h6>
+                        <h5>Notifications</h5>
+
+                    </a>
+                    {% endif %}
+                    <div class="notifications" style="position: absolute;top: 40px;width: 450px;background-color: white;padding: 10px;display: none;right: 340px;flex-direction: column;z-index: 1000;" >
+                        <h4 style="position: absolute;top: 0;right: 0;background-color: rgb(52, 52, 52);color: white;width: 25px;height: 25px;cursor: pointer;display: flex;justify-content: center;align-items: center;z-index: 1990;background-color: rgb(180, 38, 38);pointer-events: all;" onclick="closeNotifications()"><i class="fa-solid fa-xmark"></i></h4>
+                        <h3 style="font-size: 19px;font-weight: 600;text-align: left;width: fit-content;display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="notifications" style="color: #07a44b;"></ion-icon> Notifications For You</h3>
+                        <br>
+                        <p style="font-size: 13px;opacity: 0.7;margin-top: -15px;position: relative;">Below are the list of notifications you have</p>
+                        {% for notification in notifications %}
+                        <a style="display: flex;gap: 8px;justify-content: center;align-items: flex-start;margin-top: 25px;cursor:pointer;text-decoration: none;color: black;">
+
+                            <img src="{% static 'images/09 (1).jpg' %}" alt="" style="width: 50px;height: 50px;border-radius: 100px;object-fit: cover;margin-left: 15px;margin-right: 15px;">
+                            <p style="font-weight: 600;font-size: 14px;line-height: 25px;">{{notification.message}}</p>
+                        </a>
+
+                        {% endfor %}
+                        <!-- <button onclick="closeNotifications()">close</button> -->
+                    </div>
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;margin-left: 0px;" href="{% url 'logout' %}">
+                        <h6><ion-icon name="log-out"></ion-icon></h6>
+                        <h5>Logout</h5>
+                    </a>
+                    {% endif %}
+
+                    <div class="login" style="opacity: 0;user-select: none;">
+                        <h5>USD</h5>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+        </div>
+        <!-- <img src="{% static 'images/banner.png' %}" alt="" style="width: 100%;object-fit: contain;margin-top: 120px;pointer-events: none;user-select: none;"> -->
+
+        {% if not profile.is_hospital and not profile.is_shopkeeper %}
+        <div class="banner-wrap" style="display: flex;justify-content: center;align-items: center;position: relative;margin-top: -9px;">
+            <div class="text" style="position: absolute;text-align: center;z-index: 10;top: 100px;">
+                <h2 style="width: 600px;">Manage Your <span style="color: #3dd6ba;">Appointments </span></h2>
+                <p>Nurturing Minds and Inspiring Transformation.</p>
+
+                <h1 class="arrow"><ion-icon name="arrow-down"></ion-icon></h1>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1531924224004-7beee12117a6?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" style="width: 100%;height:55vh;object-fit: cover;margin-top: 100px;filter: brightness(0.7);">
+        </div>
+        {% else  %}
+        <!-- <div class="banner-wrap" style="display: flex;justify-content: center;align-items: center;position: relative;margin-top: -29px;">
+            <div class="text" style="position: absolute;text-align: center;z-index: 10;top: 100px;">
+                <h2 style="width: 600px;">Inspiring <span style="color: #3dd6ba;">Better Health </span>Care For Everyone</h2>
+                <p>Healing Horizons: Inside the World of Hospital Care</p>
+
+                <h1 class="arrow"><ion-icon name="arrow-down"></ion-icon></h1>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1520206319821-0496cfdeb31e?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" style="width: 100%;height:55vh;object-fit: cover;margin-top: 100px;filter: brightness(0.7);">
+        </div> -->
+        {% endif %}
+        <!-- <div class="banner-bottom">
+            <div class="details">
+                <h5>MUST HAVE</h5>
+                <h3>Best Selling Products</h3>
+            </div>
+            <img src="Blood-Pressure-and-Sprague-Stethoscope-Kit.jpg" alt="">
+            <img src="Honey-Tulsi-300g.jpg" alt="">
+            <img src="Milk-Powder-900g (1).jpg" alt="">
+            <img src="Pack-of-50-Disposable-Face-Masks.jpg" alt="">
+            <img src="UX-A-01-Non-Contact-Infrared-Thermometer.jpg" alt="">
+            <img src="Vitamin-C-with-Zinc-30-Tablets.jpg" alt="">
+        </div> -->
+        <!-- <div class="first-section">
+            <div class="section1">
+                <img class="img1" src="banner-2-13.jpg" alt="">
+                <img class="img2" src="banner-2-14.jpg" alt="">
+                <img class="img3" src="banner-2-15.jpg" alt="">
+            </div>
+        </div> -->
+       <!-- <img src="{% static 'images/clients.png' %}" alt="" style="width: 100%;"> -->
+        <!-- <div class="features" style="background-color: #ebebeb;">
+            <div class="feature">
+                <h1 style="color: #4298b4;">400K+</h1>
+                <h4>Tests Today</h4>
+            </div>
+            <div class="feature">
+                <h1 style="color: #e4ae3a;">100K+</h1>
+                <h4>Total Users</h4>
+            </div>
+            <div class="feature">
+                <h1 style="color: #33a474;">700K+</h1>
+                <h4>Classes Total</h4>
+            </div>
+            <div class="feature">
+                <h1 style="color: #88619a;">500K+</h1>
+                <h4>Blogs Read</h4>
+            </div>
+        </div> -->
+        <!-- <hr> -->
+        {% if not profile.is_hospital  %}
+
+        {% if not profile.is_doctor %}
+
+         {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <div class="section2 what">
+
+            <h1 style="width: 550px;text-align: center;margin-top: 25px;text-transform: uppercase;" id="apps">Manage <span style="color: #3dd6ba;">Appointments </span>​</h1>
+            <p style="width: 400px;text-align: center;margin-top: -25px;font-weight: 500;opacity: 0.6;">Harmony in the White Coats: Mastering the Art of Doctor Administration</p>
+            <p style="margin-top: -25px;font-weight: 600;color: #138f82;">ALL APPOINTMENTS</p>
+            <!-- <div class="site-features">
+                <div class="feat">
+
+                    <img src="{% static 'images/09 (1).jpg.png' %}" alt="">
+                    <h3>Sounds Of Healing</h3>
+                    <p>Music Healing</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/pic3.png' %}" alt="">
+                    <h3>Depression Prediction</h3>
+                    <p>Are u Depressed?</p>
+                    <button>Depression<ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/watch.png' %}" alt="">
+                    <h3>Depression Awareness</h3>
+                    <p>View Blogs</p>
+                    <button>View Awareness <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/reading.png' %}" alt="">
+                    <h3>Focus Boosting</h3>
+                    <p>Meditate Now</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+            </div> -->
+            {% if profile.is_doctor %}
+            <form action="{% url 'leave' %}" method="post">
+                {% csrf_token %}
+                <label for="" style="font-weight: bold;">Mark Leave : </label>
+                <input type="date" name="date" style="padding: 8px;border-radius: 8px;border: 2px solid rgb(225, 225, 225);">
+                <button style="padding: 10px;border: none;background-color: #07a44b;color: white;border-radius: 10px;">Submit</button>
+            </form>
+            <table style="position: relative;z-index: 1;margin-bottom: 50px;width: 95%;">
+
+                <tr>
+
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Name</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Gender</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Symptoms</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Blood</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 10%;"><ion-icon name="location" style="color: #07a44b;"></ion-icon> Date</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 10%;"><ion-icon name="locate" style="color: #07a44b;"></ion-icon> Time</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 30%;"><ion-icon name="call" style="color: #07a44b;"></ion-icon> Action</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 80%;"><ion-icon name="call" style="color: #07a44b;"></ion-icon> Prescription
+                    </th>
+                    <!-- <th style="font-weight: 600;font-size: 15px;width: 30%;">Transcation</th> -->
+
+                </tr>
+                {% for appointment in appointments %}
+
+                <tr>
+
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.username}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.gender}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">
+                        <form action="{% url 'editsymp' pk=appointment.pk %}" method="post"  style="display: flex;justify-content: center;align-items: center;gap: 10px;">
+                            {% csrf_token %}
+                            <input type="text" name="text" value="{{appointment.symptoms}}" style="padding: 10px;border-radius: 8px;border: 2px solid rgb(230, 230, 230);outline: none;">
+                            <button style="padding: 10px;border-radius: 8px;border: 2px solid rgb(255, 255, 255);outline: none;background-color: #07a44b;color: white;">Edit</button>
+                        </form>
+                    </td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.blood}}</td>
+
+                    <td style="text-align: center;font-size: 14px;width: 150px;">{{appointment.date}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 150px;">{{appointment.time}}</td>
+                    {% if not appointment.done and not appointment.reject %}
+                    <td style="text-align: center;font-size: 14px;width: 280px;display: flex;gap: 10px;justify-content: center;">
+
+                        <form action="{% url 'done' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{appointment.pk}}" name="pk">
+                        <button style="padding: 8px;border: none;background-color: #07a44b;color: white;border-radius: 5px;">Done</button>
+                    </form>
+                    <form action="{% url 'reject' %}" method="post">
+                        {% csrf_token %}
+
+                        <input type="hidden" value="{{appointment.pk}}" name="pk">
+                        <button style="padding: 8px;border: none;background-color: #a93030;color: white;border-radius: 5px;" onclick="alert('payment will be refunded')">Reject</button>
+                    </form>
+                    <!-- <button style="padding: 8px;border: none;background-color: #a93030;color: white;border-radius: 5px;">Reject</button> -->
+                    </td>
+                    {% else %}
+                    {% if appointment.done %}
+                    <td style="text-align: center;font-size: 14px;width: 280px;display: flex;gap: 10px;justify-content: center;">
+
+                        <form action="{% url 'done1' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{appointment.pk}}" name="pk">
+                        <button style="padding: 8px;border: none;background-color: #a93030;color: white;border-radius: 5px;">Disable Messaging</button>
+                    </form>
+                    {% endif %}
+                    {% endif %}
+                    <td style="text-align: center;font-size: 14px;width: 100px;">
+                        <form method="post" enctype="multipart/form-data" action="{% url 'prescription' %}" style="display: flex;justify-content: center;align-items: center;">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{appointment.pk}}" name="pk">
+                            
+                                
+                            <input type="text" name="prescription" placeholder="Enter Prescription" style="padding: 10px;border-radius: 8px;border: 2px solid rgb(230, 230, 230);outline: none;">
+                               
+                            <button style="padding: 8px;border: none;background-color: #07a44b;color: white;border-radius: 5px;">Upload</button>
+
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+
+
+
+            </table>
+            {% else %}
+            <table style="position: relative;z-index: 1;margin-bottom: 50px;width: 95%">
+
+                <tr>
+
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Name</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Gender</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Symptoms</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 10%;"><ion-icon name="person" style="color: #07a44b;"></ion-icon> Blood</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 20%;"><ion-icon name="location" style="color: #07a44b;"></ion-icon> Date</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 25%;"><ion-icon name="locate" style="color: #07a44b;"></ion-icon> Time</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 10%;"><ion-icon name="time" style="color: #07a44b;"></ion-icon> Status</th>
+                    <th style="font-weight: 600;font-size: 15px;width: 80%;"><ion-icon name="book" style="color: #07a44b;"></ion-icon> Prescription
+                    </th>
+                    <!-- <th style="font-weight: 600;font-size: 15px;width: 30%;">Transcation</th> -->
+
+                </tr>
+                {% for appointment in userapps %}
+
+                <tr>
+
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.doctor}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.gender}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.symptoms}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 190px;">{{appointment.blood}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 150px;">{{appointment.date}}</td>
+                    <td style="text-align: center;font-size: 14px;width: 150px;">{{appointment.time}}</td>
+                    {% if not appointment.done and not appointment.reject %}
+                    <td style="text-align: center;font-size: 14px;width: 280px;display: flex;gap: 10px;justify-content: center;">
+
+                       Pending
+                    </td>
+                    {% elif appointment.done  %}
+                    <td style="text-align: center;font-size: 14px;width: 150px;display: flex;gap: 10px;justify-content: center;">
+
+                        Accepted
+                     </td>
+                     {% elif appointment.reject %}
+                     <td style="text-align: center;font-size: 14px;width: 150px;display: flex;gap: 10px;justify-content: center;">
+
+                        Rejected
+                     </td>
+                     {% endif %}
+                    <td style="text-align: center;font-size: 14px;width: 100px;">
+                        {% if appointment.prescription %}
+                            <a style="cursor: pointer;" onclick="fillPrescriptionForm('{{ appointment.doctor }}', '{{ appointment.symptoms }}', '{{ appointment.date }}','{{appointment.prescription}}')">View</a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+
+
+
+            </table>
+            {% endif %}
+            <!-- {% if not appointments %}
+            <h2 style="margin-bottom: 25px;">No appointments to show</h2>
+            {% endif %} -->
+
+        </div>
+        {% endif %}
+        <!-- <hr> -->
+
+        {% elif profile.is_hospital %}
+        {% if request.user.is_authenticated %}
+
+        {% endif %}
+        {% endif %}
+
+        <!-- <div class="section3" style="margin-bottom: 50px;position: relative;">
+            <div class="third-section">
+                <img src="{% static 'images/banner-2-16.jpg' %}" alt="">
+                <img src="{% static 'images/banner-2-17.jpg' %}" alt="">
+            </div>
+        </div>   -->
+
+        <center>
+             <div style="background-color: rgb(30, 30, 30);padding-top: 20px;padding-bottom: 20px;position: relative;" class="about">
+                <!-- <img src="{% static 'images/pattern.png' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute !important; top: 0;left: 0;opacity: 0.15;"> -->
+                <h2 style="color: rgb(255, 255, 255);font-weight: 600;">About US</h2>
+                <p style="width: 650px;text-align: center;color: #5d5d5d;line-height: 30px;margin-top: 25px;font-weight: 600;">Our mission is to empower individuals to take control of their mental health through accessible, evidence-based stress relief techniques. We believe that everyone deserves to live a life free from the debilitating effects of stress and anxiety. </p>
+            </div>
+        </center>
+
+
+        <footer style="background-color: rgb(30, 30, 30);width: 100%;height: 60px;color: white;display: flex;justify-content: center;align-items: center;gap: 45px;" class="foot">
+            <!-- <h3>Follow us on</h3> -->
+            <h4><ion-icon name="logo-facebook"></ion-icon></h4>
+            <h4><ion-icon name="logo-twitter"></ion-icon></h4>
+            <h4><ion-icon name="logo-instagram"></ion-icon></h4>
+        </footer>
+
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+    function fillPrescriptionForm(doc,symp,date,pres){
+
+        document.querySelector('.doctor').innerText = doc
+        document.querySelector('.date').innerText = date
+        document.querySelector('.symptom').innerText = symp
+        document.querySelector('.pres').innerText = pres
+        document.querySelector('.prespop').style.display = "block"
+    }
+    function downloadScreenshot() {
+        document.querySelector('.download').style.display = "none"
+        
+        html2canvas(document.getElementById('prescriptionPopup'), {
+            onrendered: function(canvas) {
+                var link = document.createElement('a');
+                link.download = 'prescription.png';
+                link.href = canvas.toDataURL('image/jpg');
+                link.click();
+            }
+        });
+        setTimeout(()=>{
+            document.querySelector('.prespop').style.display = "none"
+        },2000)
+    }
+        function checkDate(element,username,parent){
+        console.log(element.value);
+        var data = new FormData()
+
+      data.append("date", element.value)
+      data.append("username", username)
+
+      data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+      $.ajax({
+
+          method:"POST",
+          url:'/checkDate/',
+          processData:false,
+          contentType:false,
+          // MimeType:"multipart/form-data",
+          data:data,
+          success:function(res){
+
+            var times = parent.querySelector('.times')
+            times.innerHTML = '';
+            console.log(times);
+            for(var i = 0;i<res.times.length;i++){
+
+                var time = document.createElement('option')
+                time.classList.add('time-option')
+                time.value = res.times[i]
+                time.text = res.times[i]
+                console.log(time);
+                times.append(time)
+            }
+            console.log(times.innerHTML);
+
+          }
+      })
+    }
+
+    function showAppointment(currentElement,parentElement){
+        currentElement.style.display = 'none'
+        parentElement.querySelector('.appointmentForm').style.display = "block"
+        parentElement.querySelector('.book').style.display = "block"
+    }
+
+    function sendData(){
+
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.userName').value)
+        data.append("password", document.querySelector('.password').value)
+
+
+
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkLogin1/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+                    login(data)
+                    localStorage.setItem("username",document.querySelector('.userName').value)
+                    localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+                    document.querySelector('.error').style.display = "flex"
+
+                }
+
+
+            }
+        })
+    }
+
+    function login(data){
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/login1/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                console.log("it worked :)")
+
+                setTimeout(()=>{
+
+                    location.reload();
+                },1000)
+            }
+            })
+    }
+
+    function signup(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/register/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup2(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerShop/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup3(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerHosp/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function signup4(data){
+        console.log("888888888");
+        $.ajax({
+
+            method:"POST",
+            url:'/registerDoc/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000)
+            }
+            })
+
+    }
+
+    function checkSignup(){
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.username1').value)
+        data.append("email", document.querySelector('.email1').value)
+        data.append("password", document.querySelector('.password1').value)
+        data.append("phone", document.querySelector('.phone').value)
+        data.append("address", document.querySelector('.address').value)
+        data.append("image", $("input[id^='file']")[0].files[0])
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignup/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (document.querySelector('.email1').value.match(validRegex)) {
+                            document.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (document.querySelector('.username1').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.phone').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.address').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.password1').value == "" ) {
+
+                            alert("please fill the password!");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(document.querySelector('.password1').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    document.querySelector('.err2').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup(data)
+                            }
+
+
+            }
+        })
+    }
+
+    function checkSignup2(){
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.username2').value)
+        data.append("email", document.querySelector('.email2').value)
+        data.append("password", document.querySelector('.password2').value)
+        data.append("phone", document.querySelector('.phone2').value)
+        data.append("address", document.querySelector('.address2').value)
+        data.append("type", document.querySelector('.type2').value)
+
+        data.append("image", $("input[id^='file2']")[0].files[0])
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (document.querySelector('.email2').value.match(validRegex)) {
+                            document.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (document.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        document.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (document.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(document.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    document.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup2(data)
+                            }
+
+
+            }
+        })
+    }
+
+    function checkSignup4(element){
+        var data = new FormData()
+
+        data.append("username", element.querySelector('.username2').value)
+        data.append("firstname", element.querySelector('.first').value)
+        data.append("lastname", element.querySelector('.last').value)
+        data.append("email", element.querySelector('.email2').value)
+        data.append("password", element.querySelector('.password2').value)
+        data.append("phone", element.querySelector('.phone2').value)
+        data.append("address", element.querySelector('.address2').value)
+        data.append("image", $("input[id^='file4']")[0].files[0])
+        data.append("type", element.querySelector('.type').value)
+        data.append("time", element.querySelector('.time').value)
+        data.append("city", element.querySelector('.city3').value)
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (element.querySelector('.email2').value.match(validRegex)) {
+                            // element.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (element.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(element.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    element.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup4(data)
+                            }
+
+
+            }
+        })
+    }
+
+    var currentDate = new Date();
+
+// Format the date as yyyy-mm-dd
+    var formattedDate = currentDate.toISOString().slice(0, 10);
+
+    // Set the min attribute of the input field
+    document.getElementById('appointment-date').setAttribute('min', formattedDate);
+
+    // Set the default value of the input field
+    // document.getElementById('appointment-date').value = formattedDate;
+
+
+
+    function checkSignup3(element){
+        var data = new FormData()
+
+        data.append("username", element.querySelector('.username2').value)
+        data.append("email", element.querySelector('.email2').value)
+        data.append("password", element.querySelector('.password2').value)
+        data.append("phone", element.querySelector('.phone2').value)
+        data.append("address", element.querySelector('.address2').value)
+        data.append("image", $("input[id^='file3']")[0].files[0])
+        data.append("type", element.querySelector('.type').value)
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+        $.ajax({
+
+            method:"POST",
+            url:'/checkSignupShopkeeper/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+
+                if(res.message === 0){
+
+
+                        // alert("Valid email address!");
+
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+                        if (element.querySelector('.email2').value.match(validRegex)) {
+                            // element.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+
+                        } else {
+
+                            alert("Invalid email address!");
+                            error = 1
+
+
+                        }
+
+                        if (element.querySelector('.username2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.phone2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.address2').value == "") {
+
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        // element.querySelector('.err2').style.display = "none"
+
+
+                        } else {
+
+                            console.log("");
+                            error = 0
+
+                        }
+
+                        if (element.querySelector('.password2').value == "" ) {
+
+                            alert("please fill the password!");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+                            }
+
+                            else if(element.querySelector('.password2').value.length < 7){
+
+                            alert("password length must be greater than 7");
+                            // element.querySelector('.err2').style.display = "none"
+                            error = 1
+
+
+                            }
+
+                            else{
+                                error = 0
+
+                            }
+
+
+
+
+
+
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+
+                }
+                else{
+
+
+                    element.querySelector('.err3').style.display = "flex"
+
+                }
+
+                if(error == 0){
+                                signup3(data)
+                            }
+
+
+            }
+        })
+    }
+
+
+    function closeUpload(){
+        document.querySelector('.upload-bill').style.display = "none"
+    }
+
+    function showUpload(){
+        document.querySelector('.upload-bill').style.display = "flex"
+    }
+
+    function scrollToContact(){
+        document.querySelector('.foot').scrollIntoView()
+    }
+    function scrollToAbout(){
+        document.querySelector('.about').scrollIntoView()
+    }
+
+    function showMsg(){
+            document.querySelector('.message').style.display = "block"
+
+        }
+
+        function closeMsg(){
+            document.querySelector('.message').style.display = "none"
+        }
+
+        function sendMsg(){
+
+if(document.querySelector('.text-msg').value !=""){
+var data = new FormData();
+
+data.append("message", document.querySelector('.text-msg').value)
+data.append("from_user", document.querySelector('.from_user').value)
+data.append("to_user", document.querySelector('.to_user').value)
+
+data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+
+$.ajax({
+
+    method:"POST",
+    url:'/sendMsg1/',
+    processData:false,
+    contentType:false,
+    MimeType:"multipart/form-data",
+    data:data,
+    success:function(res){
+
+        var chat = document.createElement('div')
+        chat.classList.add('right-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = document.querySelector('.text-msg').value
+        chat.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat)
+        document.querySelector('.text-msg').value = "";
+
+            $('.messages').scrollBottom($(".messages").height());
+
+    }
+    })
+
+}
+}
+
+$('.text-msg').keydown(function(event) {
+
+var data = new FormData();
+
+if(document.querySelector('.text-msg').value !=""){
+
+data.append("message", document.querySelector('.text-msg').value)
+data.append("from_user", document.querySelector('.from_user').value)
+data.append("to_user", document.querySelector('.to_user').value)
+
+data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+if (event.keyCode == 13) {
+    $.ajax({
+
+    method:"POST",
+    url:'/sendMsg1/',
+    processData:false,
+    contentType:false,
+    MimeType:"multipart/form-data",
+    data:data,
+    success:function(res){
+
+
+
+        var chat = document.createElement('div')
+        chat.classList.add('right-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = document.querySelector('.text-msg').value
+        chat.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat)
+
+        var chat_from = document.createElement('div')
+        chat_from.classList.add('left-chat')
+
+        var h4 = document.createElement('h4')
+        h4.innerText = res.result
+        chat_from.append(h4)
+
+        var messages = document.querySelector('.messages')
+
+        messages.appendChild(chat_from)
+
+        document.querySelector('.text-msg').value = "";
+        document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight;
+
+    }
+    })
+return false;
+}
+}
+});
+
+    function showMessages(element){
+        document.querySelector('.wrap-chats').style.display = "none"
+        document.querySelector('.wrap-msg').style.display = "block"
+
+        var data = new FormData();
+
+
+        // data.append("message", document.querySelector('.text-msg').value)
+        data.append("from_user", element.querySelector('.from_user1').value)
+        data.append("to_user", element.querySelector('.to_user1').value)
+        // console.log(document.querySelector('.to_user').value);
+        document.querySelector('.to_user').value = document.querySelector('.to_user1').value
+        document.querySelector('.global_to').value = document.querySelector('.to_user1').value
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+        var msgs = document.querySelectorAll('.left-chat')
+
+        for(var i =0;i<msgs.length;i++){
+            msgs[i].remove()
+        }
+
+        var msgs2 = document.querySelectorAll('.right-chat')
+
+        for(var i =0;i<msgs2.length;i++){
+            msgs2[i].remove()
+        }
+
+        $.ajax({
+
+            method:"POST",
+            url:'/showMessages/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                document.querySelector('.chat-pic').src = res.image
+                document.querySelector('.avg').src = res.avg
+                document.querySelector('.cht-username').innerText = element.querySelector('.to_user1').value
+                console.log(res.message[0].message);
+                document.querySelector('.to_user').value =  element.querySelector('.to_user1').value
+                for(var i =0 ;i<res.message.length;i++){
+                    if(res.message[i].from_user == element.querySelector('.from_user1').value){
+                    var chat = document.createElement('div')
+                    chat.classList.add('right-chat')
+
+                    var h4 = document.createElement('h4')
+                    h4.innerText = res.message[i].message
+                    chat.append(h4)
+
+                    var messages = document.querySelector('.messages')
+
+                    messages.appendChild(chat)
+                    // document.querySelector('.text-msg').value = "";
+                    }
+
+                    else{
+
+                        var chat = document.createElement('div')
+                        chat.classList.add('left-chat')
+
+                        var h4 = document.createElement('h4')
+                        h4.innerText = res.message[i].message
+                        chat.append(h4)
+
+                        var messages = document.querySelector('.messages')
+
+                        messages.appendChild(chat)
+                        // document.querySelector('.text-msg').value = "";
+
+                    }
+
+                }
+                document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight;
+
+            }
+            })
+
+
+    }
+
+    function back(){
+        document.querySelector('.wrap-msg').style.display = "none";
+        document.querySelector('.wrap-chats').style.display = "block";
+    }
+
+    function changeHospital(element){
+        console.log("-------------------"+element.value);
+        var doctors = document.querySelectorAll('.doctors')
+        var count = 0;
+        for(var i = 0;i<doctors.length;i++){
+            if(doctors[i].classList.contains(element.value)){
+                doctors[i].style.display = "block"
+                count = count + 1
+            }
+
+            else{
+                doctors[i].style.display = "none"
+            }
+            if(count == 0){
+                document.querySelector('.no').style.display = "flex"
+            }
+            else{
+                document.querySelector('.no').style.display = "none"
+            }
+        }
+        if(element.value == ""){
+            document.querySelector('.no').style.display = "none"
+            for(var i = 0;i<doctors.length;i++){
+                doctors[i].style.display = "block"
+                // count = count + 1
+
+            }
+        }
+    }
+
+    function addToCart(pk,element){
+
+      var data = new FormData()
+
+      data.append("pk", pk)
+      data.append("quantity",1)
+
+
+
+      data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+      $.ajax({
+
+          method:"POST",
+          url:'/addToCart/',
+          processData:false,
+          contentType:false,
+          // MimeType:"multipart/form-data",
+          data:data,
+          success:function(res){
+            console.log(element);
+            element.innerHTML = '<ion-icon name="cart"></ion-icon> Added'
+
+          }
+      })
+  }
+
+  function share(url){
+    console.log(url);
+    navigator.clipboard.writeText(url)
+    document.querySelector('.copy').style.display = "flex"
+    setTimeout(()=>{
+        document.querySelector('.copy').style.display = "none"
+    },9000)
+  }
+
+  // Set the minimum and maximum time values
+
+  document.addEventListener('DOMContentLoaded', function () {
+            var questions = document.querySelectorAll('.faq-question');
+            questions.forEach(function (question) {
+                question.addEventListener('click', function () {
+                    var answer = this.nextElementSibling;
+                    if (answer.style.display === 'block') {
+                        answer.style.display = 'none';
+                    } else {
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+        });
+
+    // document.getElementById('appointment-time').setAttribute('min', '06:00');
+// document.getElementById('appointment-time').setAttribute('max', '23:59');
+  </script>
+</body>
+</html>

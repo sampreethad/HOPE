@@ -1,0 +1,937 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body id="style-2">
+    <div class="login-wrapper">
+        <div class="main" style="margin-top: -180px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;z-index: 100;font-size: 15px;" onclick="closeLogin()"><i class="fa-solid fa-x"></i></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1 style="color: black;">Signin</h1>
+            <p>Login into your account now</p>
+    
+            <div class="inputs">
+                <input type="text" placeholder="username" class="userName" style="margin-bottom: 10px;"><br>
+                <input type="password" placeholder="password" class="password"><br>
+            </div>
+            <p style="display: none;justify-content: center;align-items: center;width: 100%;margin-top: 25px;opacity: 1;margin-bottom: 10px;" class="error">Invalid login credentials</p>
+
+            <button onclick="sendData()">Login into my account</button>
+        </div>
+    </div>
+
+    <div class="signup-wrapper">
+        <div class="main" style="width: 380px;margin-top: -160px;padding-left: 25px;">
+            <h2 style="position: absolute;top: 20px;right: 20px;color: black;font-size: 15px;" onclick="closeSignup()"><i class="fa-solid fa-x"></i></ion-icon></h2>
+            <img src="{% static 'images/66841-medicine-capsule.gif' %}" alt="" style="width: 80px;transform: rotate(90deg); margin-bottom: 28px;">
+            <h1  style="color: black;">Signup</h1>
+            <p>Create your new account now</p>
+    
+            <div class="inputs inps">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 10px;width: 100%;">
+
+                    <input type="text" placeholder="username" class="username1"><br>
+                    <input type="email" placeholder="email address" class="email1"><br>
+                </div>
+                <input type="number" placeholder="phone number" class="phone">
+                <input type="text" placeholder="Address" class="address"><br>
+
+                <input type="password" placeholder="password" class="password1"><br>
+            </div>
+            <p style="margin-top: -7px;color: rgb(9, 9, 9);opacity: 0.7;width: 100%;text-align: center;display: none;font-size: 15px;justify-content: center;align-items: center;margin-bottom: 15px;" class="err2">Username already exists</p>
+
+            <button onclick="checkSignup()">Create a new account account</button>
+        </div>
+    </div>
+    
+    <div class="upload-bill">
+
+        <form method="POST" action="{% url 'addProduct' %}" enctype="multipart/form-data">
+            <img src="{% static 'images/pattern.png' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute;top: 0;opacity: 0.2;">
+            {% csrf_token %}
+            <h4 onclick = "closeUpload()" style="position: absolute;top: 15px;right: 15px;width: 30px;height: 30px;border-radius: 100px;background-color: rgb(188, 43, 43);color: white;display: flex;justify-content: center;align-items: center;cursor: pointer;"><i class="fa-solid fa-xmark"></i></h4>
+            <h3 style="margin-top: 25px;">Upload Product</h3>
+            <p>Enter the details below</p>
+            <img src="{% static 'images/medicine.png' %}" alt="" style="position: relative;z-index: 1;width: 60%;">
+            <button style="position: relative;padding: 10px;width: 180px;background-color: rgb(37, 157, 83);color: white;border: none;outline: none;border-radius: 5px;font-weight: 600;font-size: 16px;">Choose Image <input type="file" name="image" id="" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;opacity: 0;" required></button>
+            <h2 style="margin-top: 25px;">Product Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder="Name" required name = "name">
+                <input type="number" placeholder="Dosage" required min="0" name="dosage">
+                <input type="number" placeholder="Price" required min="1" name="price">
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+
+                <input type="text" placeholder="Active Ingredient" name="activeIngredient" required>
+                <select id="route" name="route" required>
+                    <option value="">Select Route</option>
+                    <option value="oral">Oral</option>
+                    <option value="topical">Topical</option>
+                    <option value="injection">Injection</option>
+                    <option value="inhalation">Inhalation</option>
+                    <option value="nasal">Nasal</option>
+                    <option value="rectal">Rectal</option>
+                    <option value="transdermal">Transdermal</option>
+                  </select>
+            </div>
+
+            <h2>Manufacturer Information</h2>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <input type="text" placeholder="Manufacturer Name" name="manufacturerName" required>
+                <input type="text" placeholder="Address" name="manufacturerAddress" required>
+
+            </div>
+            <div class="group" style="padding-right: 150px;width: 96%;">
+                <!-- <input type="text" placeholder="Country" name="manufacturerCountry" required> -->
+                <select id="country" name="manufacturerCountry" class="form-control" required>
+                    <option value="">Select country</option>
+                    <option value="Afghanistan">Afghanistan</option>
+                    <option value="Åland Islands">Åland Islands</option>
+                    <option value="Albania">Albania</option>
+                    <option value="Algeria">Algeria</option>
+                    <option value="American Samoa">American Samoa</option>
+                    <option value="Andorra">Andorra</option>
+                    <option value="Angola">Angola</option>
+                    <option value="Anguilla">Anguilla</option>
+                    <option value="Antarctica">Antarctica</option>
+                    <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Armenia">Armenia</option>
+                    <option value="Aruba">Aruba</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Austria">Austria</option>
+                    <option value="Azerbaijan">Azerbaijan</option>
+                    <option value="Bahamas">Bahamas</option>
+                    <option value="Bahrain">Bahrain</option>
+                    <option value="Bangladesh">Bangladesh</option>
+                    <option value="Barbados">Barbados</option>
+                    <option value="Belarus">Belarus</option>
+                    <option value="Belgium">Belgium</option>
+                    <option value="Belize">Belize</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Bermuda">Bermuda</option>
+                    <option value="Bhutan">Bhutan</option>
+                    <option value="Bolivia">Bolivia</option>
+                    <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                    <option value="Botswana">Botswana</option>
+                    <option value="Bouvet Island">Bouvet Island</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+                    <option value="Brunei Darussalam">Brunei Darussalam</option>
+                    <option value="Bulgaria">Bulgaria</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                    <option value="Burundi">Burundi</option>
+                    <option value="Cambodia">Cambodia</option>
+                    <option value="Cameroon">Cameroon</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Cape Verde">Cape Verde</option>
+                    <option value="Cayman Islands">Cayman Islands</option>
+                    <option value="Central African Republic">Central African Republic</option>
+                    <option value="Chad">Chad</option>
+                    <option value="Chile">Chile</option>
+                    <option value="China">China</option>
+                    <option value="Christmas Island">Christmas Island</option>
+                    <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Comoros">Comoros</option>
+                    <option value="Congo">Congo</option>
+                    <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+                    <option value="Cook Islands">Cook Islands</option>
+                    <option value="Costa Rica">Costa Rica</option>
+                    <option value="Cote D'ivoire">Cote D'ivoire</option>
+                    <option value="Croatia">Croatia</option>
+                    <option value="Cuba">Cuba</option>
+                    <option value="Cyprus">Cyprus</option>
+                    <option value="Czech Republic">Czech Republic</option>
+                    <option value="Denmark">Denmark</option>
+                    <option value="Djibouti">Djibouti</option>
+                    <option value="Dominica">Dominica</option>
+                    <option value="Dominican Republic">Dominican Republic</option>
+                    <option value="Ecuador">Ecuador</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="El Salvador">El Salvador</option>
+                    <option value="Equatorial Guinea">Equatorial Guinea</option>
+                    <option value="Eritrea">Eritrea</option>
+                    <option value="Estonia">Estonia</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+                    <option value="Faroe Islands">Faroe Islands</option>
+                    <option value="Fiji">Fiji</option>
+                    <option value="Finland">Finland</option>
+                    <option value="France">France</option>
+                    <option value="French Guiana">French Guiana</option>
+                    <option value="French Polynesia">French Polynesia</option>
+                    <option value="French Southern Territories">French Southern Territories</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Gibraltar">Gibraltar</option>
+                    <option value="Greece">Greece</option>
+                    <option value="Greenland">Greenland</option>
+                    <option value="Grenada">Grenada</option>
+                    <option value="Guadeloupe">Guadeloupe</option>
+                    <option value="Guam">Guam</option>
+                    <option value="Guatemala">Guatemala</option>
+                    <option value="Guernsey">Guernsey</option>
+                    <option value="Guinea">Guinea</option>
+                    <option value="Guinea-bissau">Guinea-bissau</option>
+                    <option value="Guyana">Guyana</option>
+                    <option value="Haiti">Haiti</option>
+                    <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+                    <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+                    <option value="Honduras">Honduras</option>
+                    <option value="Hong Kong">Hong Kong</option>
+                    <option value="Hungary">Hungary</option>
+                    <option value="Iceland">Iceland</option>
+                    <option value="India">India</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+                    <option value="Iraq">Iraq</option>
+                    <option value="Ireland">Ireland</option>
+                    <option value="Isle of Man">Isle of Man</option>
+                    <option value="Israel">Israel</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Jamaica">Jamaica</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Jersey">Jersey</option>
+                    <option value="Jordan">Jordan</option>
+                    <option value="Kazakhstan">Kazakhstan</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Kiribati">Kiribati</option>
+                    <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+                    <option value="Korea, Republic of">Korea, Republic of</option>
+                    <option value="Kuwait">Kuwait</option>
+                    <option value="Kyrgyzstan">Kyrgyzstan</option>
+                    <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+                    <option value="Latvia">Latvia</option>
+                    <option value="Lebanon">Lebanon</option>
+                    <option value="Lesotho">Lesotho</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Libyan Arab Jamahiriya">Libyan Arab Jamahiriya</option>
+                    <option value="Liechtenstein">Liechtenstein</option>
+                    <option value="Lithuania">Lithuania</option>
+                    <option value="Luxembourg">Luxembourg</option>
+                    <option value="Macao">Macao</option>
+                    <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Malawi">Malawi</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Maldives">Maldives</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Malta">Malta</option>
+                    <option value="Marshall Islands">Marshall Islands</option>
+                    <option value="Martinique">Martinique</option>
+                    <option value="Mauritania">Mauritania</option>
+                    <option value="Mauritius">Mauritius</option>
+                    <option value="Mayotte">Mayotte</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+                    <option value="Moldova, Republic of">Moldova, Republic of</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Mongolia">Mongolia</option>
+                    <option value="Montenegro">Montenegro</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Mozambique">Mozambique</option>
+                    <option value="Myanmar">Myanmar</option>
+                    <option value="Namibia">Namibia</option>
+                    <option value="Nauru">Nauru</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="Netherlands">Netherlands</option>
+                    <option value="Netherlands Antilles">Netherlands Antilles</option>
+                    <option value="New Caledonia">New Caledonia</option>
+                    <option value="New Zealand">New Zealand</option>
+                    <option value="Nicaragua">Nicaragua</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Niue">Niue</option>
+                    <option value="Norfolk Island">Norfolk Island</option>
+                    <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+                    <option value="Norway">Norway</option>
+                    <option value="Oman">Oman</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Palau">Palau</option>
+                    <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+                    <option value="Panama">Panama</option>
+                    <option value="Papua New Guinea">Papua New Guinea</option>
+                    <option value="Paraguay">Paraguay</option>
+                    <option value="Peru">Peru</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="Pitcairn">Pitcairn</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Puerto Rico">Puerto Rico</option>
+                    <option value="Qatar">Qatar</option>
+                    <option value="Reunion">Reunion</option>
+                    <option value="Romania">Romania</option>
+                    <option value="Russian Federation">Russian Federation</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Saint Helena">Saint Helena</option>
+                    <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                    <option value="Saint Lucia">Saint Lucia</option>
+                    <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+                    <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+                    <option value="Samoa">Samoa</option>
+                    <option value="San Marino">San Marino</option>
+                    <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                    <option value="Saudi Arabia">Saudi Arabia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Serbia">Serbia</option>
+                    <option value="Seychelles">Seychelles</option>
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Slovakia">Slovakia</option>
+                    <option value="Slovenia">Slovenia</option>
+                    <option value="Solomon Islands">Solomon Islands</option>
+                    <option value="Somalia">Somalia</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Sri Lanka">Sri Lanka</option>
+                    <option value="Sudan">Sudan</option>
+                    <option value="Suriname">Suriname</option>
+                    <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+                    <option value="Swaziland">Swaziland</option>
+                    <option value="Sweden">Sweden</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+                    <option value="Taiwan">Taiwan</option>
+                    <option value="Tajikistan">Tajikistan</option>
+                    <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Timor-leste">Timor-leste</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Tokelau">Tokelau</option>
+                    <option value="Tonga">Tonga</option>
+                    <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                    <option value="Tunisia">Tunisia</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="Turkmenistan">Turkmenistan</option>
+                    <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+                    <option value="Tuvalu">Tuvalu</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="United Arab Emirates">United Arab Emirates</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                    <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+                    <option value="Uruguay">Uruguay</option>
+                    <option value="Uzbekistan">Uzbekistan</option>
+                    <option value="Vanuatu">Vanuatu</option>
+                    <option value="Venezuela">Venezuela</option>
+                    <option value="Viet Nam">Viet Nam</option>
+                    <option value="Virgin Islands, British">Virgin Islands, British</option>
+                    <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+                    <option value="Wallis and Futuna">Wallis and Futuna</option>
+                    <option value="Western Sahara">Western Sahara</option>
+                    <option value="Yemen">Yemen</option>
+                    <option value="Zambia">Zambia</option>
+                    <option value="Zimbabwe">Zimbabwe</option>
+                </select>
+                <input type="text" placeholder="Contact Number" name="manufacturerContactNumber" required>
+              
+            </div>
+
+            <!-- <input type="text" id="ins-payment" name="ins-payment" placeholder="Insurance Payment"><br> -->
+            <!-- <input type="text" id="patient-responsibility" name="patient-responsibility" placeholder="Patient Responsibility"><br> -->
+            
+            <input type="submit" value="Submit" style="background-color: #138f82;color: white;width: 94.5%;">
+        </form>
+
+    </div>
+
+
+    <div class="container">
+        <div class="navbar" style="position: fixed;top: 0;width: 100%;z-index: 150;background-color: white;">
+            <div class="navbar1">
+                <div style="width: 1200px;display: flex;justify-content: space-between;align-items: center;padding-left: 45px;">
+
+                    <h1>Welcome {{request.user.username}} to medicate!</h1>
+                    <div class="login-details">
+                        {% if not request.user.is_authenticated %}
+                        <div class="login" onclick="showLogin()" style="cursor: pointer;">
+                            <h6><ion-icon name="log-in"></ion-icon></h6>
+                            <h5>Login</h5>
+                        </div>
+                        <div class="login" onclick="showSignup()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="person-add"></ion-icon></h6>
+                            <h5>Signup</h5>
+                        </div>
+                        <div class="login" onclick="showSignupShopkeeper()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="business"></ion-icon></h6>
+                            <h5>Shopkeeper Signup</h5>
+                        </div>
+                        <div class="login" onclick="showSignupHospital()" style="cursor: pointer;margin-left: 35px;">
+                            <h6><ion-icon name="medical"></ion-icon></h6>
+                            <h5>Hospital Signup</h5>
+                        </div>
+                    {% else %}
+                    {% if profile.is_shopkeeper %}
+                    <div class="login" style="cursor: pointer;" onclick="showUpload()">
+                        <img src="{% static 'images/en.jpg' %}" alt="">
+                        <h5><ion-icon name="add-outline"></ion-icon> Add Product</h5>
+                    </div>
+                    {% endif %}
+                    {% if profile.is_hospital %}
+                    <div class="login" onclick="showSignupDoctor()" style="cursor: pointer;margin-left: 35px;">
+                        <h6><ion-icon name="medical"></ion-icon></h6>
+                        <h5>Add Doctor</h5>
+                    </div>
+                    {% endif %}
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;cursor: default;border: 2px solid rgb(255, 255, 255);padding: 5px 15px 5px 15px;border-radius: 100px;background-color: #07a44b;color: white;gap: 5px;" >
+                        <h6 style="font-weight: 600;color: white;">₹</h6>
+                        <h5 style="color: white;">{{profile.balance}}</h5>
+                        
+                    </a>
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;position: relative;" onclick="showNotifications()">
+                        <h6><ion-icon name="notifications"></ion-icon></h6>
+                        <h5>Notifications</h5>
+                        
+                    </a>
+                    <div class="notifications" style="position: absolute;top: 40px;width: 450px;background-color: white;padding: 10px;display: none;right: 340px;flex-direction: column;z-index: 1000;" >
+                        <h4 style="position: absolute;top: 0;right: 0;background-color: rgb(52, 52, 52);color: white;width: 25px;height: 25px;cursor: pointer;display: flex;justify-content: center;align-items: center;z-index: 1990;background-color: rgb(180, 38, 38);pointer-events: all;" onclick="closeNotifications()"><i class="fa-solid fa-xmark"></i></h4>
+                        <h3 style="font-size: 19px;font-weight: 600;text-align: left;width: fit-content;display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="notifications" style="color: #07a44b;"></ion-icon> Notifications For You</h3>
+                        <br>
+                        <p style="font-size: 13px;opacity: 0.7;margin-top: -15px;position: relative;">Below are the list of notifications you have</p>
+                        {% for notification in notifications %}
+                        <a style="display: flex;gap: 8px;justify-content: center;align-items: flex-start;margin-top: 25px;cursor:pointer;text-decoration: none;color: black;">
+
+                            <img src="{% static 'images/09 (1).jpg' %}" alt="" style="width: 50px;height: 50px;border-radius: 100px;object-fit: cover;margin-left: 15px;margin-right: 15px;">
+                            <p style="font-weight: 600;font-size: 14px;line-height: 25px;">{{notification.message}}</p>
+                        </a>
+                        
+                        {% endfor %}
+                        <!-- <button onclick="closeNotifications()">close</button> -->
+                    </div>
+                    <a class="login"  style="cursor: pointer;text-decoration: none;color: black;margin-left: 25px;" href="{% url 'logout' %}">
+                        <h6><ion-icon name="log-out"></ion-icon></h6>
+                        <h5>Logout</h5>
+                    </a>
+                    {% endif %}
+                    
+                    <div class="login" style="opacity: 0;user-select: none;">
+                        <h5>USD</h5>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="navbar2">
+                <div style="display: flex;justify-content: center;align-items: center;gap: 25px;">
+
+                    <img src="{% static 'images/logo-default.png' %}" alt="" style="width: 120px;">
+                    <div class="links">
+                        <a href="{% url 'homepage' %}">Home</a>
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'shop' %}">Shop</a>
+                        {% else %}
+                        <a onclick="showLogin()" style="cursor: pointer;">Shop</a>
+                        
+                        {% endif %}
+                        {% if not profile.is_shopkeeper and not profile.is_hospital and not profile.is_doctor %}
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'music' %}" style="cursor: pointer;">Music</a>
+                        {% else %}
+                        <a onclick="showLogin()" style="cursor: pointer;">Music</a>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'meditation' %}" style="cursor: pointer;">Meditation</a>
+                        {% else %}
+                        <a onclick="showLogin()" style="cursor: pointer;">Meditation</a>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'depression' %}" style="">Depression Check</a>
+                        {% endif %}
+                        <a href="" style="opacity: 0;pointer-events: none;">Pagess</a>
+                        <a href="" style="opacity: 0;pointer-events: none;">Pa</a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if request.user.is_authenticated and not profile.is_shopkeeper %}
+                <div class="like">
+                    <!-- <h5 style="font-size: 14px;"><ion-icon name="heart-outline"></ion-icon></h5> -->
+                    <!-- <h5 style="font-size: 14px;"></h5> -->
+
+                    <a href="{% url 'cart' %}" style="text-decoration: none;color: black;font-weight: 600;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="cart-outline"></ion-icon> My Cart</h3></a>
+                    <a href="{% url 'orders' %}" style="text-decoration: none;color: black;font-weight: 600;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;margin-left: 25px;"><ion-icon name="wallet-outline"></ion-icon> My orders</h3></a>
+                </div>
+                {% else %}
+                <div class="like" style="opacity: 0;display: none;">
+                    <!-- <h5 style="font-size: 14px;"><ion-icon name="heart-outline"></ion-icon></h5> -->
+                    <!-- <h5 style="font-size: 14px;"></h5> -->
+                    <a onclick="showLogin()" style="text-decoration: none;color: black;font-weight: 600;cursor: pointer;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="cart-outline"></ion-icon> My Cart</h3></a>
+                    <a onclick="showLogin()" style="text-decoration: none;color: black;font-weight: 600;cursor: pointer;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;margin-left: 25px;"><ion-icon name="wallet-outline"></ion-icon> My orders</h3></a>
+                </div>
+                {% endif %}
+                {% if request.user.is_authenticated and profile.is_shopkeeper %}
+                <div class="like">
+                    <!-- <h5 style="font-size: 14px;"><ion-icon name="heart-outline"></ion-icon></h5> -->
+                    <!-- <h5 style="font-size: 14px;"></h5> -->
+                    <a href="{% url 'orders' %}" style="text-decoration: none;color: black;font-weight: 600;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;margin-left: 25px;margin-right: 25px;"><ion-icon name="wallet-outline"></ion-icon> All orders</h3></a>
+
+                    <!-- <a href="{% url 'notifications' %}" style="text-decoration: none;color: black;font-weight: 600;"><h3 style="display: flex;justify-content: center;align-items: center;gap: 15px;"><ion-icon name="notifications-outline"></ion-icon> Notifications</h3></a> -->
+                    
+
+                </div>
+                {% endif %}
+            </div>
+            
+        </div>
+        <h2 style="position: fixed;top: 120px;left: 42%;background-color: #f0f0f0;color: rgb(37, 37, 37);padding: 8px;width: 250px;border-radius: 5px;font-size: 16px;z-index: 1500;font-weight: 600;text-align: center;" class="copy">Copied To Clipboard</h2>
+
+        <div class="banner-wrap" style="display: flex;justify-content: center;align-items: center;position: relative;margin-top: -29px;">
+            <div class="text" style="position: absolute;text-align: center;z-index: 10;top: 100px;">
+                <h2 style="width: 600px;">Depression <span style="color: #3dd6ba;">Unveiling the Shadows </span>Within </h2>
+                <p style="margin-top: 20px;">Nurturing Minds and Inspiring Transformation.</p>
+                <h1 class="arrow"><ion-icon name="arrow-down"></ion-icon></h1>
+                <!-- <button>Show All Products</button> -->
+            </div>
+            <!-- <video style="height: 400px;width: 100%;object-fit: cover;filter: brightness(0.7);" autoplay muted loop>
+                <source src="{% static 'images/pexels-taryn-elliott-5271828-1920x1080-25fps.mp4' %}"></source>
+            </video> -->
+            <img src="{% static 'images/pexels-paul-cameron-1187972.jpg' %}" alt="" style="width: 100%;height:55vh;object-fit: cover;margin-top: 100px;filter: brightness(0.5);">
+        </div>
+        <div class="section2" style="margin-bottom: 50px;">
+            <h1 style="margin-top: 25px;text-transform: uppercase;">Depression <span style="color: #33a474;">Awareness</span></h1>
+
+            <p style="margin-top: -25px;width: 520px;text-align: center;font-weight: 600;line-height: 30px;opacity: 0.7;">"Shedding Light on the Future: Predicting Depression with Precision</p>
+            <p style="margin-top: -25px;font-weight: 600;color: #138f82;">BLOGS</p>
+            
+            <div class="blogs" style="display: flex;flex-wrap: wrap;gap: 15px;justify-content: center;align-items: flex-start;">
+                {% for blog in blogs %}
+                <div style="width: 400px; background-color: #ffffff; border-radius: 5px; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);border:2px solid rgb(233, 233, 233)">
+                    <div style="position: relative; overflow: hidden; border-radius: 5px;">
+                        <img src="{{blog.image.url}}" alt="Blog Image" style="width: 100%; height: 250px;object-fit: cover;">
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.6); padding: 10px;">
+                            <h2 style="font-size: 18px; color: #ffffff; margin: 0;text-align: left;line-height: 27px;">{{blog.name}}</h2>
+                        </div>
+                    </div>
+                    <div class="author" style="background-color: white;border-bottom: 1px solid rgb(225, 225, 225);">
+                        <img src="{% static 'images/09 (1).jpg' %}" alt="">
+                        <div>
+                            <h4>Admin</h4>
+                            <p>{{blog.date}}</p>
+                        </div>
+                    </div> 
+                    <input type="hidden" name="" class="blogOpen" value="0">
+                    <p class = "desc" style="font-size: 15px; margin-top: 10px; line-height: 28px; font-weight: 600;opacity: 0.8;padding-left: 15px;height: 80px;overflow: hidden;text-align: left;padding-right: 18px;font-size: 13px;transition: 0.3s;text-align: justify;">{{blog.desc}}</p>
+                    <a onclick="showBlog(this.parentNode,this)" style="cursor: pointer;display: inline-block; font-size: 14px; color: #141414; background-color: #ededed; font-weight: 600;border-radius: 5px; padding: 10px 20px; text-decoration: none; transition: background-color 0.3s ease;width: 90%;text-align: center;margin-top: 25px;margin-bottom: 8px;">Read More</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- <button class="sub" onclick="subAns()">Submit My Answers <ion-icon name="arrow-redo"></ion-icon></button> -->
+            <h3 class="result"></h3>
+            <p style="font-weight: 600;color: #3c9452;display: none;" class="resPara">Try these to clear your mind</p>
+
+            <div class="site-features" style="display: none;">
+                <div class="feat">
+
+                    <img src="{% static 'images/pic_1.png' %}" alt="">
+                    <h3>Sounds Of Healing</h3>
+                    <p>Music Healing</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                
+                <div class="feat">
+
+                    <img src="{% static 'images/watch.png' %}" alt="">
+                    <h3>Depression Awareness</h3>
+                    <p>View Blogs</p>
+                    <button>View Awareness <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+                <div class="feat">
+
+                    <img src="{% static 'images/reading.png' %}" alt="">
+                    <h3>Focus Boosting</h3>
+                    <p>Meditate Now</p>
+                    <button>View Music <ion-icon name="arrow-forward-circle"></ion-icon></button>
+                </div>
+            </div>
+            
+            
+        </div>     
+        <!-- <div class="section3" style="margin-bottom: 50px;position: relative;">
+            <div class="third-section">
+                <img src="{% static 'images/banner-2-16.jpg' %}" alt="">
+                <img src="{% static 'images/banner-2-17.jpg' %}" alt="">
+            </div>    
+        </div>   -->
+
+        <center>
+            <div style="background-color: rgb(30, 30, 30);padding-top: 20px;padding-bottom: 20px;position: relative;" class="about">
+                <!-- <img src="{% static 'images/pattern.png' %}" alt="" style="width: 100%;height: 100%;object-fit: cover;position: absolute !important; top: 0;left: 0;opacity: 0.15;"> -->
+                <h2 style="color: rgb(255, 255, 255);font-weight: 600;">About US</h2>
+                <p style="width: 650px;text-align: center;color: #5d5d5d;line-height: 30px;margin-top: 25px;font-weight: 600;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et fugit, numquam delectus aperiam quam necessitatibus voluptatum accusamus impedit? Autem tempora sequi earum molestias consequatur! Vitae natus praesentium at perferendis nulla?</p>
+            </div>
+            
+        </center>
+
+        <footer style="background-color: rgb(30, 30, 30);width: 100%;height: 60px;color: white;display: flex;justify-content: center;align-items: center;gap: 45px;" class="footer">
+            <!-- <h3>Follow us on</h3> -->
+            <h4><ion-icon name="logo-facebook"></ion-icon></h4>
+            <h4><ion-icon name="logo-twitter"></ion-icon></h4>
+            <h4><ion-icon name="logo-instagram"></ion-icon></h4>
+        </footer>
+        
+       
+    </div>    
+    <script src="{% static 'js/index.js' %}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script> 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<script>
+    function sendData(){
+        
+        var data = new FormData()
+  
+        data.append("username", document.querySelector('.userName').value)
+        data.append("password", document.querySelector('.password').value)
+  
+        
+  
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+        
+        $.ajax({
+  
+            method:"POST",
+            url:'/checkLogin/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                localStorage.setItem("message",res.message)
+  
+                if(res.message === 0){
+                    
+                    login(data)
+                    localStorage.setItem("username",document.querySelector('.userName').value)
+                    localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+                    
+                }
+                else{
+                    document.querySelector('.error').style.display = "flex"
+                    
+                }
+                
+  
+            }
+        })
+    }
+
+    function subAns(){
+        
+        var data = new FormData()
+        var stringText = ""
+        var error = 0;
+        var answers = document.querySelectorAll('.ans')
+
+        for(var i =0;i<answers.length;i++){
+            if(answers[i].value ==''){
+                alert("Please fill all the answers")
+                error = 1
+                break
+            }
+            else{
+                stringText = stringText + "."+answers[i].value
+            }
+        }
+        console.log(stringText);
+  
+        data.append("stringText", stringText)
+        
+  
+        
+  
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+        if(error == 0){
+        $.ajax({
+  
+            method:"POST",
+            url:'/depressionCheck/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                
+                document.querySelector('.result').innerText = res.result
+                if(res.result == "Depressed." || res.result == "depressed" || res.result == "Depressed"){
+                    document.querySelector('.site-features').style.display = "flex"
+                    document.querySelector('.resPara').style.display = "flex"
+                }
+                else{
+                    document.querySelector('.site-features').style.display = "none"
+                    document.querySelector('.resPara').style.display = "none"
+                }
+  
+            }
+        })
+    }
+    }
+  
+    function login(data){
+  
+  
+        $.ajax({
+  
+            method:"POST",
+            url:'/login/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                console.log("it worked :)")
+                
+                setTimeout(()=>{
+  
+                    location.reload();
+                },1000)
+            }
+            })
+    }
+  
+    function signup(data){
+        console.log("888888888");
+        $.ajax({
+  
+            method:"POST",
+            url:'/register/',
+            processData:false,
+            contentType:false,
+            MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                
+                setTimeout(()=>{
+  
+                    location.reload();
+  
+                },1000)
+            }
+            })
+  
+    }
+  
+    function checkSignup(){
+        var data = new FormData()
+  
+        data.append("username", document.querySelector('.username1').value)
+        data.append("email", document.querySelector('.email1').value)
+        data.append("password", document.querySelector('.password1').value)
+        data.append("phone", document.querySelector('.phone').value)
+        data.append("address", document.querySelector('.address').value)
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+  
+        
+        $.ajax({
+  
+            method:"POST",
+            url:'/checkSignup/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                // localStorage.setItem("message",res.message)
+  
+                if(res.message === 0){
+                    
+  
+                        // alert("Valid email address!");
+                        
+                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  
+                        if (document.querySelector('.email1').value.match(validRegex)) {
+                            document.querySelector('.err2').style.display = "none"
+                            // alert("Valid email address!");
+                            error = 0
+                            console.log("");
+  
+                        } else {
+  
+                            alert("Invalid email address!");
+                            error = 1
+                            
+  
+                        }
+  
+                        if (document.querySelector('.username1').value == "") {
+  
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter a valid username!");
+                        document.querySelector('.err2').style.display = "none"
+  
+  
+                        } else {
+  
+                            console.log("");
+                            error = 0
+  
+                        }
+  
+                        if (document.querySelector('.phone').value == "") {
+  
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter phone number!");
+                        document.querySelector('.err2').style.display = "none"
+  
+  
+                        } else {
+  
+                            console.log("");
+                            error = 0
+  
+                        }
+  
+                        if (document.querySelector('.address').value == "") {
+  
+  // alert("Valid email address!");
+                        error = 1
+                        alert("please enter your address!");
+                        document.querySelector('.err2').style.display = "none"
+  
+  
+                        } else {
+  
+                            console.log("");
+                            error = 0
+  
+                        }
+  
+                        if (document.querySelector('.password1').value == "" ) {
+  
+                            alert("please fill the password!");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+                            } 
+                            
+                            else if(document.querySelector('.password1').value.length < 7){
+  
+                            alert("password length must be greater than 7");
+                            document.querySelector('.err2').style.display = "none"
+                            error = 1
+  
+  
+                            }
+  
+                            else{
+                                error = 0
+                                
+                            }
+  
+                            
+                        
+  
+                    
+                    
+                    // localStorage.setItem("username",document.querySelector('.username').value)
+                    // localStorage.setItem('password',document.querySelector('.password').value)
+                    // location.reload();
+                    
+                }
+                else{
+                    
+  
+                    document.querySelector('.err2').style.display = "flex"
+  
+                }
+  
+                if(error == 0){
+                                signup(data)
+                            }
+                
+  
+            }
+        })
+    }
+  
+    function addToCart(pk,element){
+      
+      var data = new FormData()
+
+      data.append("pk", pk)
+      data.append("quantity",1)
+
+      
+
+      data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+      
+      $.ajax({
+
+          method:"POST",
+          url:'/addToCart/',
+          processData:false,
+          contentType:false,
+          // MimeType:"multipart/form-data",
+          data:data,
+          success:function(res){
+            console.log(element);
+            element.innerHTML = '<ion-icon name="cart"></ion-icon> Added'
+
+          }
+      })
+  }
+    
+    function closeUpload(){
+        document.querySelector('.upload-bill').style.display = "none"
+    }
+
+    function showUpload(){
+        document.querySelector('.upload-bill').style.display = "flex"
+    }
+    
+    function scrollToContact(){
+        document.querySelector('.footer').scrollIntoView()
+    }
+    function scrollToAbout(){
+        document.querySelector('.about').scrollIntoView()
+    }
+
+    function share(url){
+    console.log(url);
+    navigator.clipboard.writeText(url)
+    document.querySelector('.copy').style.display = "flex"
+    setTimeout(()=>{
+        document.querySelector('.copy').style.display = "none"
+    },9000)
+  }
+  
+  function showBlog(element,currentElement){
+    // element.style.position = "fixed"
+    // element.style.zIndex = "15"
+    // element.style.top = "250px"
+    // element.style.transform = "scale(1.1)"
+    if(element.querySelector('.blogOpen').value == 0){
+    element.querySelector('.desc').style.height = 'fit-content'
+    element.querySelector('.desc').style.fontSize = '13px'
+    currentElement.innerText = "Hide Details"
+    element.style.border = "2px solid rgb(233, 233, 233)"
+    element.querySelector('.blogOpen').value = "1"
+    }
+    else{
+        element.querySelector('.desc').style.height = '80px'
+    element.querySelector('.desc').style.fontSize = '13px'
+    currentElement.innerText = "Read More"
+    element.querySelector('.blogOpen').value = "0"
+    }
+  }
+  
+  </script>   
+</body>
+</html>
